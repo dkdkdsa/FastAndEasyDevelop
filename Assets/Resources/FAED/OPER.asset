@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f46cf3422a89c7f448bc2aaff441afe7, type: 3}
+  m_Name: OPER
+  m_EditorClassIdentifier: 
+  links:
+  - baseNodeGuid: eea14dcb-4156-44de-858f-bbcaf860154d
+    portName: Next
+    targetNodeGuid: 1bb5aa72-ca7c-4d63-802d-62a6b77b5546
+    portCount: 0
+  - baseNodeGuid: 384618fc-8920-4d41-a0da-c50e898cfb3e
+    portName: true
+    targetNodeGuid: 63dd1b73-867b-4295-8403-e1417c4cc261
+    portCount: 0
+  - baseNodeGuid: 1bb5aa72-ca7c-4d63-802d-62a6b77b5546
+    portName: State 2
+    targetNodeGuid: 085ecbad-9269-45ce-be0c-d7ee3ddab2d3
+    portCount: 0
+  - baseNodeGuid: 1bb5aa72-ca7c-4d63-802d-62a6b77b5546
+    portName: State 1
+    targetNodeGuid: 384618fc-8920-4d41-a0da-c50e898cfb3e
+    portCount: 1
+  - baseNodeGuid: 63dd1b73-867b-4295-8403-e1417c4cc261
+    portName: true
+    targetNodeGuid: 3c7cbd86-7598-4747-a768-fa82b1a3bee2
+    portCount: 0
+  - baseNodeGuid: 63dd1b73-867b-4295-8403-e1417c4cc261
+    portName: false
+    targetNodeGuid: 87c8bfe2-f268-495e-8417-ec5a1884f150
+    portCount: 1
+  - baseNodeGuid: 384618fc-8920-4d41-a0da-c50e898cfb3e
+    portName: false
+    targetNodeGuid: c71a3a88-14ab-4d66-9df0-3481020e95f5
+    portCount: 0
+  editorGrahpData:
+  - Guid: 384618fc-8920-4d41-a0da-c50e898cfb3e
+    dialogueText: BoolNode
+    position: {x: 727.2, y: 149.59999}
+    nodeType: 4
+  - Guid: 1bb5aa72-ca7c-4d63-802d-62a6b77b5546
+    dialogueText: MainStateMachine
+    position: {x: 425.6, y: 190.4}
+    nodeType: 1
+  - Guid: 085ecbad-9269-45ce-be0c-d7ee3ddab2d3
+    dialogueText: Action
+    position: {x: 630.4, y: -4}
+    nodeType: 0
+  - Guid: 63dd1b73-867b-4295-8403-e1417c4cc261
+    dialogueText: BoolNode
+    position: {x: 891.2, y: 48.000004}
+    nodeType: 4
+  - Guid: 3c7cbd86-7598-4747-a768-fa82b1a3bee2
+    dialogueText: Action
+    position: {x: 1072.8, y: -127.2}
+    nodeType: 0
+  - Guid: 87c8bfe2-f268-495e-8417-ec5a1884f150
+    dialogueText: Action
+    position: {x: 1130.4, y: 128}
+    nodeType: 0
+  - Guid: c71a3a88-14ab-4d66-9df0-3481020e95f5
+    dialogueText: 123
+    position: {x: 908.8, y: 277.6}
+    nodeType: 0

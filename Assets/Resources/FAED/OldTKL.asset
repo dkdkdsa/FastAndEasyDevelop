@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f46cf3422a89c7f448bc2aaff441afe7, type: 3}
+  m_Name: OldTKL
+  m_EditorClassIdentifier: 
+  links:
+  - baseNodeGuid: 38f32f5b-fee3-42ae-ace1-59db3cb1e2e7
+    portName: Next
+    targetNodeGuid: 2e5fe5b1-d3ef-47e8-a9e3-f294e92cdf4b
+    portCount: 0
+  - baseNodeGuid: 2e5fe5b1-d3ef-47e8-a9e3-f294e92cdf4b
+    portName: State 1
+    targetNodeGuid: 7d47a77c-628e-4d11-9a37-a6ddf97a8616
+    portCount: 0
+  - baseNodeGuid: 2e5fe5b1-d3ef-47e8-a9e3-f294e92cdf4b
+    portName: State 2
+    targetNodeGuid: 654b41f8-2b29-4cae-ba7f-94b8734a1bf5
+    portCount: 1
+  - baseNodeGuid: 654b41f8-2b29-4cae-ba7f-94b8734a1bf5
+    portName: true
+    targetNodeGuid: 83bbface-c120-4d24-af64-d33ae89bbfca
+    portCount: 0
+  - baseNodeGuid: 654b41f8-2b29-4cae-ba7f-94b8734a1bf5
+    portName: false
+    targetNodeGuid: 6ce09233-d5ef-476e-ac40-2698181a1ba6
+    portCount: 1
+  - baseNodeGuid: 03c9c488-4595-443f-9e66-d175c0c36147
+    portName: false
+    targetNodeGuid: 83bbface-c120-4d24-af64-d33ae89bbfca
+    portCount: 0
+  - baseNodeGuid: 7d47a77c-628e-4d11-9a37-a6ddf97a8616
+    portName: false
+    targetNodeGuid: 03c9c488-4595-443f-9e66-d175c0c36147
+    portCount: 0
+  - baseNodeGuid: 7d47a77c-628e-4d11-9a37-a6ddf97a8616
+    portName: true
+    targetNodeGuid: 943825a6-d142-4a92-b27b-cb71f692897f
+    portCount: 1
+  - baseNodeGuid: 03c9c488-4595-443f-9e66-d175c0c36147
+    portName: true
+    targetNodeGuid: 71b36f32-432a-4bae-98e4-f1dff7d971d3
+    portCount: 0
+  editorGrahpData:
+  - Guid: 2e5fe5b1-d3ef-47e8-a9e3-f294e92cdf4b
+    dialogueText: MainStateMachine
+    position: {x: 275.2, y: 200}
+    nodeType: 1
+  - Guid: 654b41f8-2b29-4cae-ba7f-94b8734a1bf5
+    dialogueText: BoolNode
+    position: {x: 547.2, y: 264}
+    nodeType: 4
+  - Guid: 7d47a77c-628e-4d11-9a37-a6ddf97a8616
+    dialogueText: BoolNode
+    position: {x: 547.2, y: 163.2}
+    nodeType: 4
+  - Guid: 6ce09233-d5ef-476e-ac40-2698181a1ba6
+    dialogueText: Action
+    position: {x: 736, y: 409.6}
+    nodeType: 0
+  - Guid: 83bbface-c120-4d24-af64-d33ae89bbfca
+    dialogueText: Action
+    position: {x: 778.4, y: 292}
+    nodeType: 0
+  - Guid: 71b36f32-432a-4bae-98e4-f1dff7d971d3
+    dialogueText: Action
+    position: {x: 1068, y: 64.8}
+    nodeType: 0
+  - Guid: 03c9c488-4595-443f-9e66-d175c0c36147
+    dialogueText: BoolNode
+    position: {x: 745.6, y: 149.59999}
+    nodeType: 4
+  - Guid: 943825a6-d142-4a92-b27b-cb71f692897f
+    dialogueText: Action
+    position: {x: 736, y: -141.6}
+    nodeType: 0

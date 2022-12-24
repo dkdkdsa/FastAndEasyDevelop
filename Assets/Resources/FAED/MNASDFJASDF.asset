@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f46cf3422a89c7f448bc2aaff441afe7, type: 3}
+  m_Name: MNASDFJASDF
+  m_EditorClassIdentifier: 
+  links:
+  - baseNodeGuid: 7fc1326a-13c7-4a17-a6a3-18fb447a210f
+    portName: State 1
+    targetNodeGuid: 3ade5638-6c6b-4030-a4b9-43b69ce2f641
+    portCount: 2
+  - baseNodeGuid: 7fc1326a-13c7-4a17-a6a3-18fb447a210f
+    portName: State 1
+    targetNodeGuid: 172e1a27-9136-4687-b968-1925e563e240
+    portCount: 2
+  - baseNodeGuid: 7fc1326a-13c7-4a17-a6a3-18fb447a210f
+    portName: State 2
+    targetNodeGuid: ff87a4ec-4aa8-4bcb-8124-0f1b8a5ade03
+    portCount: 1
+  - baseNodeGuid: 7fc1326a-13c7-4a17-a6a3-18fb447a210f
+    portName: State 3
+    targetNodeGuid: 2c161a4f-d450-4cee-9a0f-d90116f6c4bf
+    portCount: 0
+  - baseNodeGuid: 7fc1326a-13c7-4a17-a6a3-18fb447a210f
+    portName: State 3
+    targetNodeGuid: 8b4451e5-3de5-483e-b176-beedf13c0b71
+    portCount: 0
+  - baseNodeGuid: 7fc1326a-13c7-4a17-a6a3-18fb447a210f
+    portName: State 4
+    targetNodeGuid: 3bb9d6cd-45f1-47aa-8fee-b5410e619b99
+    portCount: -1
+  - baseNodeGuid: 7fc1326a-13c7-4a17-a6a3-18fb447a210f
+    portName: State 4
+    targetNodeGuid: 267127dd-4e76-4b55-873f-5ee63b76990a
+    portCount: -1
+  - baseNodeGuid: 7fc1326a-13c7-4a17-a6a3-18fb447a210f
+    portName: State 2
+    targetNodeGuid: e7e5c8eb-158d-499e-b8b5-03ecc0dd9b3c
+    portCount: 1
+  editorGrahpData:
+  - Guid: 7fc1326a-13c7-4a17-a6a3-18fb447a210f
+    dialogueText: MainStateMachine
+    position: {x: 288, y: 220.8}
+    nodeType: 1
+  - Guid: ff87a4ec-4aa8-4bcb-8124-0f1b8a5ade03
+    dialogueText: Action
+    position: {x: 356, y: 0}
+    nodeType: 0
+  - Guid: 3ade5638-6c6b-4030-a4b9-43b69ce2f641
+    dialogueText: Action
+    position: {x: 614.4, y: 110.399994}
+    nodeType: 0
+  - Guid: 172e1a27-9136-4687-b968-1925e563e240
+    dialogueText: Action
+    position: {x: 627.2, y: 0}
+    nodeType: 0
+  - Guid: 3bb9d6cd-45f1-47aa-8fee-b5410e619b99
+    dialogueText: Action
+    position: {x: 771.2, y: 344}
+    nodeType: 0
+  - Guid: 8b4451e5-3de5-483e-b176-beedf13c0b71
+    dialogueText: Action
+    position: {x: 843.2, y: 208}
+    nodeType: 0
+  - Guid: 2c161a4f-d450-4cee-9a0f-d90116f6c4bf
+    dialogueText: Action
+    position: {x: 812.8, y: 72}
+    nodeType: 0
+  - Guid: 267127dd-4e76-4b55-873f-5ee63b76990a
+    dialogueText: Action
+    position: {x: 641.6, y: 468}
+    nodeType: 0
+  - Guid: e7e5c8eb-158d-499e-b8b5-03ecc0dd9b3c
+    dialogueText: Action
+    position: {x: 684, y: 271.2}
+    nodeType: 0
