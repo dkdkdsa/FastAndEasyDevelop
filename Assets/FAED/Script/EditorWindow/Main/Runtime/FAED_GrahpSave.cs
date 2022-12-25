@@ -44,37 +44,12 @@ namespace FD.Program.Runtime
             var logContainer = ScriptableObject.CreateInstance<FAED_DialougeContainer>();
 
             var connectedPorts  = edges.Where(x => x.input.node != null).ToArray();
-            
-
-            string currentGuid = "";
-            int portCount = 0;
-
-            //딕셔너리에 지금 이름 포트 카운트 저장하는 방법으로 풀것!! 14시간만에 풀었다!!!!!!!
-            //나중에 정렬할 방법도 찾아보자 일단은 보류 꽤 많이 정렬이 되지 않게 받아진다
-            Dictionary<string, int> keyValuePort = new Dictionary<string, int>();
-
+           
             foreach(var item in connectedPorts)
             {
 
                 var outputNode = item.output.node as FAED_AIGrahpViewNodeModlue;
                 var inputNode = item.input.node as FAED_AIGrahpViewNodeModlue;
-
-                if(currentGuid != outputNode.GUID)
-                {
-
-                    currentGuid = outputNode.GUID;
-                    portCount = 0;
-                    keyValuePort = new Dictionary<string, int>();
-                    keyValuePort.Add(item.output.portName, portCount);
-
-                }
-                else if(keyValuePort.ContainsKey(item.output.portName) == false)
-                {
-
-                    portCount += 1;
-                    keyValuePort.Add(item.output.portName, portCount);
-
-                }
 
 
                 logContainer.links.Add(new FAED_NodeLinkData
@@ -83,7 +58,7 @@ namespace FD.Program.Runtime
                     baseNodeGuid = outputNode.GUID,
                     portName = item.output.portName,
                     targetNodeGuid = inputNode.GUID,
-                    portCount = keyValuePort[item.output.portName]
+                    portCount = FAED_AIGrahpViewModlue.portNums[new FAED_PortSaveData(outputNode.GUID, item.output.portName)]
 
                 });
 

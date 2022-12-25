@@ -1,4 +1,5 @@
 using FD.Program.Runtime;
+using FD.Program.Editer.Runtime.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -129,6 +130,7 @@ namespace FD.Program.UI
         private void OnDisable()
         {
 
+            FAED_AIGrahpViewModlue.portNums = null;
             rootVisualElement.Remove(grahpView);
 
         }
@@ -139,6 +141,7 @@ namespace FD.Program.UI
     {
 
         private Dictionary<FAED_AIGrahpViewNodeModlue, List<string>> keyPort = new Dictionary<FAED_AIGrahpViewNodeModlue, List<string>>();
+        public static Dictionary<FAED_PortSaveData, int> portNums = new Dictionary<FAED_PortSaveData, int>();
 
         public readonly Vector2 defultNodeSize = new Vector2(x: 150, y: 200);        
 
@@ -220,6 +223,8 @@ namespace FD.Program.UI
 
             node.capabilities &= ~Capabilities.Movable;
             node.capabilities &= ~Capabilities.Deletable;
+
+            portNums.Add(new FAED_PortSaveData(node.GUID, "Next"), 0);
 
             stateMachineNode.RefreshExpandedState();
             node.RefreshExpandedState();
@@ -361,6 +366,17 @@ namespace FD.Program.UI
 
             var portName = string.IsNullOrEmpty(name) ? $"State {outputPortCount + 1}" : name;
 
+            //여기에서 문제 발생 새로 생성한 겍체는 기존 저장한 겍체와 값이 같더라도 다르게 취급되는 것으로 추정중
+            if (portNums.ContainsKey(new FAED_PortSaveData(dialogeNode.GUID, portName)) == false)
+            {   
+
+                portNums.Add(new FAED_PortSaveData(dialogeNode.GUID, portName), outputPortCount);
+                Debug.Log(portNums.ContainsKey(new FAED_PortSaveData(dialogeNode.GUID, portName)));
+
+            }
+
+            Debug.Log(portNums.ContainsKey(new FAED_PortSaveData(dialogeNode.GUID, portName)));
+
             var textField = new TextField { name = string.Empty, value = portName };
             textField.RegisterValueChangedCallback(evt => generatedPort.portName = evt.newValue);
             generatedPort.contentContainer.Add(new Label(" "));
@@ -399,6 +415,13 @@ namespace FD.Program.UI
             var outputPortCount = dialogeNode.outputContainer.Query(name: "connector").ToList().Count;
 
             var portName = string.IsNullOrEmpty(name) ? $"Port {outputPortCount + 1}" : name;
+
+            if (portNums.ContainsKey(new FAED_PortSaveData(dialogeNode.GUID, portName)) == false)
+            {
+
+                portNums.Add(new FAED_PortSaveData(dialogeNode.GUID, portName), outputPortCount);
+
+            }
 
             generatedPort.portName = portName;
             dialogeNode.outputContainer.Add(generatedPort);

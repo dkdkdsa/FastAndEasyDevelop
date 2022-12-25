@@ -28,5 +28,19 @@ namespace FD.Program.Editer.Runtime.Data
 
     }
 
+    [System.Serializable]
+    public class FAED_PortSaveData
+    {
+
+        public string GUID;
+        public string portName;
+
+        public FAED_PortSaveData(string GUID, string portName)
+        {
+            this.GUID = GUID;
+            this.portName = portName;
+        }
+    }
+
 }
 
