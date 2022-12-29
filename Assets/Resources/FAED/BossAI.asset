@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f46cf3422a89c7f448bc2aaff441afe7, type: 3}
+  m_Name: BossAI
+  m_EditorClassIdentifier: 
+  links:
+  - baseNodeGuid: 09d1ee5f-a696-4eca-9473-49af0537b397
+    portName: Next
+    targetNodeGuid: 8b2b33ff-b95a-4049-bba1-320925803280
+    portCount: 0
+  - baseNodeGuid: 8b2b33ff-b95a-4049-bba1-320925803280
+    portName: Jump
+    targetNodeGuid: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
+    portCount: 1
+  - baseNodeGuid: 8b2b33ff-b95a-4049-bba1-320925803280
+    portName: Move
+    targetNodeGuid: 5f9c520f-6c2f-4d10-a4f2-a3339b00bdc6
+    portCount: 0
+  - baseNodeGuid: 5f9c520f-6c2f-4d10-a4f2-a3339b00bdc6
+    portName: true
+    targetNodeGuid: 2c4d497c-6635-4062-8fbc-0a68cd85f004
+    portCount: 0
+  - baseNodeGuid: 5f9c520f-6c2f-4d10-a4f2-a3339b00bdc6
+    portName: false
+    targetNodeGuid: 02936867-f7f0-4979-a371-7a761cab6757
+    portCount: 1
+  - baseNodeGuid: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
+    portName: false
+    targetNodeGuid: 02936867-f7f0-4979-a371-7a761cab6757
+    portCount: 1
+  - baseNodeGuid: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
+    portName: true
+    targetNodeGuid: 6f1c8f80-519f-4d85-b51a-ace6b757efce
+    portCount: 0
+  editorGrahpData:
+  - Guid: 8b2b33ff-b95a-4049-bba1-320925803280
+    dialogueText: MainStateMachine
+    position: {x: 360, y: 152}
+    nodeType: 1
+  - Guid: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
+    dialogueText: IsJump
+    position: {x: 641.6, y: 243.2}
+    nodeType: 4
+  - Guid: 5f9c520f-6c2f-4d10-a4f2-a3339b00bdc6
+    dialogueText: IsMove
+    position: {x: 641.6, y: 29.600002}
+    nodeType: 4
+  - Guid: 2c4d497c-6635-4062-8fbc-0a68cd85f004
+    dialogueText: Move
+    position: {x: 840.8, y: -48.8}
+    nodeType: 0
+  - Guid: 02936867-f7f0-4979-a371-7a761cab6757
+    dialogueText: Stop
+    position: {x: 872, y: 90.399994}
+    nodeType: 0
+  - Guid: 6f1c8f80-519f-4d85-b51a-ace6b757efce
+    dialogueText: Jump
+    position: {x: 856.8, y: 328}
+    nodeType: 0

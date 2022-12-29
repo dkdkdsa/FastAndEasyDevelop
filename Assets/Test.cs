@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FD.Dev;
+using System;
+using UnityEngine.Events;
 
 public enum SS
 {
@@ -21,13 +23,10 @@ public enum SS
 public class Test : MonoBehaviour
 {
 
-    [SerializeField] private GameObject poolObj;
-
-    // Start is called before the first frame update
-    void Start()
+    public void Log(string value)
     {
 
-        
+        Debug.Log(value);
 
     }
 

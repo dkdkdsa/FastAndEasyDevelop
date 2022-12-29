@@ -13,44 +13,28 @@ MonoBehaviour:
   m_Name: New Narrative
   m_EditorClassIdentifier: 
   links:
-  - baseNodeGuid: eea14dcb-4156-44de-858f-bbcaf860154d
-    portName: Next
-    targetNodeGuid: 1bb5aa72-ca7c-4d63-802d-62a6b77b5546
-    portCount: 0
-  - baseNodeGuid: 1bb5aa72-ca7c-4d63-802d-62a6b77b5546
+  - baseNodeGuid: 7b03b70c-ea64-4923-b33a-3c966e0dac29
     portName: State 2
-    targetNodeGuid: 085ecbad-9269-45ce-be0c-d7ee3ddab2d3
-    portCount: 0
-  - baseNodeGuid: 1bb5aa72-ca7c-4d63-802d-62a6b77b5546
+    targetNodeGuid: b34cc4b8-3051-4581-854a-6f436ec2544a
+    portCount: 1
+  - baseNodeGuid: 7b03b70c-ea64-4923-b33a-3c966e0dac29
     portName: State 1
-    targetNodeGuid: 384618fc-8920-4d41-a0da-c50e898cfb3e
-    portCount: 1
-  - baseNodeGuid: 384618fc-8920-4d41-a0da-c50e898cfb3e
-    portName: true
-    targetNodeGuid: 694e60e8-6877-4f3d-bef3-4df602b0b8a6
+    targetNodeGuid: e923cd8d-eb9c-4206-a45a-e49b3fbdc9c7
     portCount: 0
-  - baseNodeGuid: 384618fc-8920-4d41-a0da-c50e898cfb3e
-    portName: false
-    targetNodeGuid: c71a3a88-14ab-4d66-9df0-3481020e95f5
-    portCount: 1
+  - baseNodeGuid: f7954332-c6de-440f-9b8f-3fe3e4064fbf
+    portName: Next
+    targetNodeGuid: 7b03b70c-ea64-4923-b33a-3c966e0dac29
+    portCount: 0
   editorGrahpData:
-  - Guid: 085ecbad-9269-45ce-be0c-d7ee3ddab2d3
-    dialogueText: Action
-    position: {x: 659.2, y: 497.60004}
-    nodeType: 0
-  - Guid: 384618fc-8920-4d41-a0da-c50e898cfb3e
-    dialogueText: BoolNode
-    position: {x: 727.2, y: 149.59999}
-    nodeType: 4
-  - Guid: 1bb5aa72-ca7c-4d63-802d-62a6b77b5546
+  - Guid: 7b03b70c-ea64-4923-b33a-3c966e0dac29
     dialogueText: MainStateMachine
-    position: {x: 425.6, y: 190.4}
+    position: {x: 344.8, y: 191.2}
     nodeType: 1
-  - Guid: c71a3a88-14ab-4d66-9df0-3481020e95f5
+  - Guid: e923cd8d-eb9c-4206-a45a-e49b3fbdc9c7
     dialogueText: Action
-    position: {x: 896, y: 243.2}
+    position: {x: 655.2, y: -11.999999}
     nodeType: 0
-  - Guid: 694e60e8-6877-4f3d-bef3-4df602b0b8a6
+  - Guid: b34cc4b8-3051-4581-854a-6f436ec2544a
     dialogueText: Action
-    position: {x: 912, y: 102.399994}
+    position: {x: 833.6, y: 243.2}
     nodeType: 0

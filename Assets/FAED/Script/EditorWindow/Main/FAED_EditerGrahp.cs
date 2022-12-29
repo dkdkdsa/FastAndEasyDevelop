@@ -24,7 +24,7 @@ namespace FD.Program.UI
         {
 
             var window = GetWindow<FAED_AIEditerGrahpWindowModule>();
-            window.titleContent = new GUIContent(text: "test");
+            window.titleContent = new GUIContent(text: "FAED_AI");
 
         }
 
@@ -120,7 +120,7 @@ namespace FD.Program.UI
         }
         private void OnEnable()
         {
-
+            FAED_AIGrahpViewModlue.portNums = new Dictionary<string, int>();
             ConstructGrahpView();
             GenerateToolbar();
             GenerateMiniMap();
@@ -141,7 +141,7 @@ namespace FD.Program.UI
     {
 
         private Dictionary<FAED_AIGrahpViewNodeModlue, List<string>> keyPort = new Dictionary<FAED_AIGrahpViewNodeModlue, List<string>>();
-        public static Dictionary<FAED_PortSaveData, int> portNums = new Dictionary<FAED_PortSaveData, int>();
+        public static Dictionary<string, int> portNums = new Dictionary<string, int>();
 
         public readonly Vector2 defultNodeSize = new Vector2(x: 150, y: 200);        
 
@@ -224,7 +224,7 @@ namespace FD.Program.UI
             node.capabilities &= ~Capabilities.Movable;
             node.capabilities &= ~Capabilities.Deletable;
 
-            portNums.Add(new FAED_PortSaveData(node.GUID, "Next"), 0);
+            portNums.Add(string.Format("{0} : {1}", node.GUID, "Next"), 0);
 
             stateMachineNode.RefreshExpandedState();
             node.RefreshExpandedState();
@@ -325,6 +325,17 @@ namespace FD.Program.UI
                 inputPort.portName = "Input";
                 dialogeNode.inputContainer.Add(inputPort);
 
+                var textField = new TextField(string.Empty);
+                textField.RegisterValueChangedCallback(evt =>
+                {
+
+                    dialogeNode.viewText = evt.newValue;
+                    dialogeNode.title = evt.newValue;
+
+                });
+
+                dialogeNode.Add(textField);
+
                 AddPort(dialogeNode, "true");
                 AddPort(dialogeNode, "false");
 
@@ -340,7 +351,7 @@ namespace FD.Program.UI
 
         }
 
-        public void AddStatePort(FAED_AIGrahpViewNodeModlue dialogeNode, string name = "")
+        public void AddStatePort(FAED_AIGrahpViewNodeModlue dialogeNode, string name = "", string Guid = "")
         {
 
             if (name != "" && keyPort.ContainsKey(dialogeNode) == true)
@@ -366,19 +377,36 @@ namespace FD.Program.UI
 
             var portName = string.IsNullOrEmpty(name) ? $"State {outputPortCount + 1}" : name;
 
-            //여기에서 문제 발생 새로 생성한 겍체는 기존 저장한 겍체와 값이 같더라도 다르게 취급되는 것으로 추정중
-            if (portNums.ContainsKey(new FAED_PortSaveData(dialogeNode.GUID, portName)) == false)
+            if (portNums.ContainsKey(string.Format("{0} : {1}", dialogeNode.GUID, portName)) == false)
             {   
 
-                portNums.Add(new FAED_PortSaveData(dialogeNode.GUID, portName), outputPortCount);
-                Debug.Log(portNums.ContainsKey(new FAED_PortSaveData(dialogeNode.GUID, portName)));
+                if(Guid == "")
+                {
+
+                    portNums.Add(string.Format("{0} : {1}", dialogeNode.GUID, portName), outputPortCount);
+
+                }
+                else
+                {
+
+                    portNums.Add(string.Format("{0} : {1}", Guid, portName), outputPortCount);
+
+                }
 
             }
 
-            Debug.Log(portNums.ContainsKey(new FAED_PortSaveData(dialogeNode.GUID, portName)));
-
             var textField = new TextField { name = string.Empty, value = portName };
-            textField.RegisterValueChangedCallback(evt => generatedPort.portName = evt.newValue);
+            textField.RegisterValueChangedCallback(evt => 
+            {
+
+                int portCount = portNums[string.Format("{0} : {1}", dialogeNode.GUID, generatedPort.portName)];
+                portNums.Remove(string.Format("{0} : {1}", dialogeNode.GUID, generatedPort.portName));
+                generatedPort.portName = evt.newValue;
+
+                portNums.Add(string.Format("{0} : {1}", dialogeNode.GUID, generatedPort.portName), portCount);
+
+            });
+
             generatedPort.contentContainer.Add(new Label(" "));
             generatedPort.contentContainer.Add(textField);
 
@@ -416,10 +444,10 @@ namespace FD.Program.UI
 
             var portName = string.IsNullOrEmpty(name) ? $"Port {outputPortCount + 1}" : name;
 
-            if (portNums.ContainsKey(new FAED_PortSaveData(dialogeNode.GUID, portName)) == false)
+            if (portNums.ContainsKey(string.Format("{0} : {1}", dialogeNode.GUID, portName)) == false)
             {
 
-                portNums.Add(new FAED_PortSaveData(dialogeNode.GUID, portName), outputPortCount);
+                portNums.Add(string.Format("{0} : {1}", dialogeNode.GUID, portName), outputPortCount);
 
             }
 
@@ -444,8 +472,8 @@ namespace FD.Program.UI
                 RemoveElement(targetEdge.First());
 
             }
-                
-                
+
+            portNums.Remove(string.Format("{0} : {1}", dialogeNode.GUID, generatedPort.portName));
 
             dialogeNode.outputContainer.Remove(generatedPort);
             dialogeNode.RefreshPorts();
@@ -473,5 +501,3 @@ namespace FD.Program.UI
     }
 
 }
-
-

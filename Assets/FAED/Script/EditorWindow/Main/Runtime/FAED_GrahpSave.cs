@@ -58,7 +58,7 @@ namespace FD.Program.Runtime
                     baseNodeGuid = outputNode.GUID,
                     portName = item.output.portName,
                     targetNodeGuid = inputNode.GUID,
-                    portCount = FAED_AIGrahpViewModlue.portNums[new FAED_PortSaveData(outputNode.GUID, item.output.portName)]
+                    portCount = FAED_AIGrahpViewModlue.portNums[string.Format("{0} : {1}", outputNode.GUID, item.output.portName)]
 
                 });
 
@@ -107,6 +107,8 @@ namespace FD.Program.Runtime
         {
 
             nodes.Find(x => x.entryPoint).GUID = container.links[0].baseNodeGuid;
+            FAED_AIGrahpViewModlue.portNums = new Dictionary<string, int>();
+            FAED_AIGrahpViewModlue.portNums.Add(string.Format("{0} : {1}", container.links[0].baseNodeGuid, container.links[0].portName), 0);
 
             foreach(var node in nodes)
             {
@@ -138,7 +140,6 @@ namespace FD.Program.Runtime
                     targetView.AddStatePort(tempNode, x.portName);
 
                 });
-                
 
             }
 
