@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace FD.AI
 {
@@ -28,9 +29,8 @@ namespace FD.AI
 
         }
 
-        private void Update()
+        void Update()
         {
-
 
             machine.AIActionAll();
 

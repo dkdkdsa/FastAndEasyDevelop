@@ -152,6 +152,7 @@ namespace FD.Program.Runtime
             {
 
                 var connections = container.links.Where(x => x.baseNodeGuid == nodes[i].GUID).ToList();
+                connections = connections.OrderBy(x => x.portCount).ToList();
                 
                 for(var j = 0; j < connections.Count; j++)
                 {

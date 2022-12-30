@@ -14,13 +14,13 @@ namespace FD.AI.Node
     internal abstract class FAED_Node
     {
 
-        public abstract string state { get; set; }
+        public abstract List<string> state { get; set; }
         public abstract string name { get; set; }
         public abstract bool able { get; set; }
         public abstract string GUID { get; set; }
 
         public abstract void NodeAction();
-        public abstract void SetState(string value);
+        public abstract void SetState(List<string> value);
 
         public void ChangeAble(bool value)
         {
@@ -38,7 +38,7 @@ namespace FD.AI.Node
         [SerializeField] private UnityEvent actionEvent;
         [SerializeField] private string showingName;
 
-        [field:SerializeField] public override string state { get; set; }
+        [field:SerializeField] public override List<string> state { get; set; } = new List<string>();
         [field:SerializeField, HideInInspector] public override string name { get; set; }
         [field: SerializeField, HideInInspector] public override string GUID { get; set; }
         [field: SerializeField, HideInInspector] public override bool able { get; set; } = true;
@@ -53,10 +53,15 @@ namespace FD.AI.Node
 
         }
 
-        public override void SetState(string value)
+        public override void SetState(List<string> value)
         {
-            
-            state = value;
+
+            value.ForEach(x =>
+            {
+
+                state.Add(x);
+
+            });
 
         }
 
@@ -77,7 +82,7 @@ namespace FD.AI.Node
 
         [HideInInspector] public List<string> tnodes = new List<string>();
         [HideInInspector] public List<string> fnodes = new List<string>();
-        [field: SerializeField] public override string state { get; set; }
+        [field: SerializeField] public override List<string> state { get; set; } = new List<string>();
         [field:SerializeField] public override string name { get; set; }
         [field:SerializeField, HideInInspector] public override bool able { get; set; } = true;
         [field:SerializeField, HideInInspector] public override string GUID { get; set; }
@@ -101,10 +106,15 @@ namespace FD.AI.Node
 
         }
 
-        public override void SetState(string value)
+        public override void SetState(List<string> value)
         {
             
-            state = value;
+            value.ForEach(x =>
+            {
+
+                state.Add(x);
+
+            });
 
         }
 
@@ -177,7 +187,7 @@ namespace FD.AI.Node
         public void BoolNodeAction(string currentState, FAED_DialougeContainer data)
         {
 
-            boolNodes.Where(x => x.state == currentState).ToList().ForEach(y =>
+            boolNodes.Where(x => x.state.Find(y => y == currentState) != null).ToList().ForEach(y =>
             {
 
                 y?.fnodes?.ForEach(z => actionNodes?.Find(k => k.GUID == z)?.ChangeAble(!y.boolState));
@@ -227,7 +237,7 @@ namespace FD.AI.Node
                         if (data.editorGrahpData.Find(x => x.Guid == item.targetNodeGuid).nodeType == FAED_AINodeType.Action)
                         {
 
-                            core.actionNodes.Find(x => x.GUID == item.targetNodeGuid).SetState(item.portName);
+                            core.actionNodes.Find(x => x.GUID == item.targetNodeGuid).SetState(new List<string> { item.portName });
 
                         }
 
@@ -238,7 +248,7 @@ namespace FD.AI.Node
                         if (data.editorGrahpData.Find(x => x.Guid == item.targetNodeGuid).nodeType == FAED_AINodeType.BoolNode)
                         {
 
-                            core.boolNodes.Find(x => x.GUID == item.targetNodeGuid).SetState(item.portName);
+                            core.boolNodes.Find(x => x.GUID == item.targetNodeGuid).SetState(new List<string> { item.portName });
 
                         }
 
@@ -273,7 +283,7 @@ namespace FD.AI.Node
         {
 
             core.BoolNodeAction(currentState, data);
-            core.actionNodes.Where(x => x.state == currentState).ToList().ForEach(y => y.NodeAction());
+            core.actionNodes.Where(x => x.state.Find(x => x == currentState) != null).ToList().ForEach(y => y.NodeAction());
             ///
         }
 

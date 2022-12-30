@@ -363,60 +363,64 @@ MonoBehaviour:
       - actionEvent:
           m_PersistentCalls:
             m_Calls:
-            - m_Target: {fileID: 1627890984}
-              m_TargetAssemblyTypeName: Test, Assembly-CSharp
-              m_MethodName: Log
-              m_Mode: 5
+            - m_Target: {fileID: 1627890981}
+              m_TargetAssemblyTypeName: 
+              m_MethodName: 
+              m_Mode: 1
               m_Arguments:
                 m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_ObjectArgumentAssemblyTypeName: 
                 m_IntArgument: 0
                 m_FloatArgument: 0
-                m_StringArgument: 1
+                m_StringArgument: 
                 m_BoolArgument: 0
               m_CallState: 2
         showingName: Move
-        <state>k__BackingField: Move
+        <state>k__BackingField:
+        - Move
         <name>k__BackingField: Move
         <GUID>k__BackingField: 2c4d497c-6635-4062-8fbc-0a68cd85f004
         <able>k__BackingField: 1
       - actionEvent:
           m_PersistentCalls:
             m_Calls:
-            - m_Target: {fileID: 1627890984}
-              m_TargetAssemblyTypeName: Test, Assembly-CSharp
-              m_MethodName: Log
-              m_Mode: 5
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: 
+              m_MethodName: 
+              m_Mode: 1
               m_Arguments:
                 m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_ObjectArgumentAssemblyTypeName: 
                 m_IntArgument: 0
                 m_FloatArgument: 0
-                m_StringArgument: 2
+                m_StringArgument: 
                 m_BoolArgument: 0
               m_CallState: 2
         showingName: Stop
-        <state>k__BackingField: Move
+        <state>k__BackingField:
+        - Jump
+        - Move
         <name>k__BackingField: Stop
         <GUID>k__BackingField: 02936867-f7f0-4979-a371-7a761cab6757
         <able>k__BackingField: 1
       - actionEvent:
           m_PersistentCalls:
             m_Calls:
-            - m_Target: {fileID: 1627890984}
-              m_TargetAssemblyTypeName: Test, Assembly-CSharp
-              m_MethodName: Log
-              m_Mode: 5
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: 
+              m_MethodName: 
+              m_Mode: 1
               m_Arguments:
                 m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_ObjectArgumentAssemblyTypeName: 
                 m_IntArgument: 0
                 m_FloatArgument: 0
-                m_StringArgument: 3
+                m_StringArgument: 
                 m_BoolArgument: 0
               m_CallState: 2
         showingName: Jump
-        <state>k__BackingField: Jump
+        <state>k__BackingField:
+        - Jump
         <name>k__BackingField: Jump
         <GUID>k__BackingField: 6f1c8f80-519f-4d85-b51a-ace6b757efce
         <able>k__BackingField: 1
@@ -425,7 +429,8 @@ MonoBehaviour:
         - 6f1c8f80-519f-4d85-b51a-ace6b757efce
         fnodes:
         - 02936867-f7f0-4979-a371-7a761cab6757
-        <state>k__BackingField: Jump
+        <state>k__BackingField:
+        - Jump
         <name>k__BackingField: IsJump
         <able>k__BackingField: 1
         <GUID>k__BackingField: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
@@ -434,7 +439,8 @@ MonoBehaviour:
         - 2c4d497c-6635-4062-8fbc-0a68cd85f004
         fnodes:
         - 02936867-f7f0-4979-a371-7a761cab6757
-        <state>k__BackingField: Move
+        <state>k__BackingField:
+        - Move
         <name>k__BackingField: IsMove
         <able>k__BackingField: 1
         <GUID>k__BackingField: 5f9c520f-6c2f-4d10-a4f2-a3339b00bdc6
