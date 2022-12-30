@@ -208,8 +208,8 @@ namespace FD.AI.Node
         [SerializeField] private FAED_AICore core;
 
         [SerializeField, HideInInspector] private string currentState;
-
-        [SerializeField, HideInInspector] FAED_DialougeContainer data;
+        [SerializeField, HideInInspector] private List<string> states; 
+        [SerializeField, HideInInspector] private FAED_DialougeContainer data;
         
         public FAED_StateMachine(FAED_DialougeContainer data)
         {
@@ -220,6 +220,7 @@ namespace FD.AI.Node
 
             var thisGuid = data.editorGrahpData.Find(x => x.nodeType == FAED_AINodeType.StateMachine).Guid;
             var states = data.links.Where(x => x.baseNodeGuid == thisGuid).ToList();
+            this.states = states.Select(x => x.portName).ToList();
 
             currentState = states.Find(x => x.portCount == 0).portName;
 
@@ -285,6 +286,18 @@ namespace FD.AI.Node
             core.BoolNodeAction(currentState, data);
             core.actionNodes.Where(x => x.state.Find(x => x == currentState) != null).ToList().ForEach(y => y.NodeAction());
             ///
+        }
+
+        public void ChangeState(string value)
+        {
+
+            if(states.Find(x => x == value) != null)
+            {
+
+                currentState = value;
+
+            }
+
         }
 
     }
