@@ -19,12 +19,20 @@ MonoBehaviour:
     portCount: 0
   - baseNodeGuid: 8b2b33ff-b95a-4049-bba1-320925803280
     portName: Jump
-    targetNodeGuid: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
-    portCount: 1
-  - baseNodeGuid: 8b2b33ff-b95a-4049-bba1-320925803280
-    portName: Move
     targetNodeGuid: 5f9c520f-6c2f-4d10-a4f2-a3339b00bdc6
     portCount: 0
+  - baseNodeGuid: 8b2b33ff-b95a-4049-bba1-320925803280
+    portName: Move
+    targetNodeGuid: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
+    portCount: 1
+  - baseNodeGuid: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
+    portName: true
+    targetNodeGuid: 6f1c8f80-519f-4d85-b51a-ace6b757efce
+    portCount: 0
+  - baseNodeGuid: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
+    portName: false
+    targetNodeGuid: 02936867-f7f0-4979-a371-7a761cab6757
+    portCount: 1
   - baseNodeGuid: 5f9c520f-6c2f-4d10-a4f2-a3339b00bdc6
     portName: true
     targetNodeGuid: 2c4d497c-6635-4062-8fbc-0a68cd85f004
@@ -33,14 +41,6 @@ MonoBehaviour:
     portName: false
     targetNodeGuid: 02936867-f7f0-4979-a371-7a761cab6757
     portCount: 1
-  - baseNodeGuid: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
-    portName: false
-    targetNodeGuid: 02936867-f7f0-4979-a371-7a761cab6757
-    portCount: 1
-  - baseNodeGuid: a410be5f-b6f1-4fd2-adaa-3199ea19b5ed
-    portName: true
-    targetNodeGuid: 6f1c8f80-519f-4d85-b51a-ace6b757efce
-    portCount: 0
   editorGrahpData:
   - Guid: 8b2b33ff-b95a-4049-bba1-320925803280
     dialogueText: MainStateMachine

@@ -1,10 +1,10 @@
 using FD.AI.Node;
+using FD.Dev;
 using FD.Program.Editer.SO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 namespace FD.AI
 {
@@ -33,6 +33,20 @@ namespace FD.AI
         {
 
             machine.AIActionAll();
+
+        }
+
+        public void ChangeState(string value)
+        {
+
+            machine.ChangeState(value);
+
+        }
+
+        public void ChangeBoolState(string name, bool boolState)
+        {
+
+            machine.ChangeBoolState(name, boolState);
 
         }
 

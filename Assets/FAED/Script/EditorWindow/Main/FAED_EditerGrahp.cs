@@ -19,7 +19,7 @@ namespace FD.Program.UI
         private FAED_AIGrahpViewModlue grahpView;
         private string fileName = "New Narrative";
 
-        [MenuItem("Graph/Test")]
+        [MenuItem("FAED_AI/FAED_AIGrahp")]
         public static void OpenGrahpViewWindow()
         {
 
@@ -59,7 +59,7 @@ namespace FD.Program.UI
 
             toolbar.Add(new Button(() => RequestDataOperation(true)) { text = "SaveData"});
             toolbar.Add(new Button(() => RequestDataOperation(false)) { text = "LoadData" });
-            toolbar.Add(new Button(() => grahpView.CreateNode("BoolNode", FAED_AINodeType.BoolNode)) { text = "CreateBoolNode" });
+            toolbar.Add(new Button(() => grahpView.CreateNode("BoolNode", FAED_AINodeType.BoolNode, false)) { text = "CreateBoolNode" });
 
             #endregion
 
@@ -148,7 +148,6 @@ namespace FD.Program.UI
         public FAED_AIGrahpViewModlue()
         {
 
-            styleSheets.Add(Resources.Load<StyleSheet>(path: "FAED_View"));
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
             this.AddManipulator(new ContentDragger());
@@ -239,7 +238,7 @@ namespace FD.Program.UI
 
         }
 
-        public FAED_AIGrahpViewNodeModlue CreateDialogNode(string nodeName, FAED_AINodeType nodeType = FAED_AINodeType.Action)
+        public FAED_AIGrahpViewNodeModlue CreateDialogNode(string nodeName, FAED_AINodeType nodeType = FAED_AINodeType.Action, bool isStarting = false)
         {
 
             if(nodeType == FAED_AINodeType.Action)//¿¢¼Ç ³ëµå
@@ -336,8 +335,13 @@ namespace FD.Program.UI
 
                 dialogeNode.Add(textField);
 
-                AddPort(dialogeNode, "true");
-                AddPort(dialogeNode, "false");
+                if(isStarting == false)
+                {
+
+                    AddPort(dialogeNode, "true");
+                    AddPort(dialogeNode, "false");
+
+                }
 
                 dialogeNode.RefreshExpandedState();
                 dialogeNode.RefreshPorts();
@@ -377,7 +381,7 @@ namespace FD.Program.UI
 
             var portName = string.IsNullOrEmpty(name) ? $"State {outputPortCount + 1}" : name;
 
-            if (portNums.ContainsKey(string.Format("{0} : {1}", dialogeNode.GUID, portName)) == false)
+            if (portNums.ContainsKey(string.Format("{0} : {1}", dialogeNode.GUID, portName)) == false || portNums.ContainsKey(string.Format("{0} : {1}", Guid, portName)) == false)
             {   
 
                 if(Guid == "")
@@ -481,10 +485,10 @@ namespace FD.Program.UI
 
         }
 
-        public void CreateNode(string nodeName, FAED_AINodeType nodeType = FAED_AINodeType.Action)
+        public void CreateNode(string nodeName, FAED_AINodeType nodeType = FAED_AINodeType.Action, bool isStart = false)
         {
 
-            AddElement(CreateDialogNode(nodeName, nodeType));
+            AddElement(CreateDialogNode(nodeName, nodeType, isStart));
 
         }
 

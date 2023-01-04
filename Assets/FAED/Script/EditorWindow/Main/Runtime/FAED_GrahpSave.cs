@@ -129,7 +129,7 @@ namespace FD.Program.Runtime
             foreach(var nodeData in container.editorGrahpData)
             {
 
-                var tempNode = targetView.CreateDialogNode(nodeData.dialogueText, nodeData.nodeType);
+                var tempNode = targetView.CreateDialogNode(nodeData.dialogueText, nodeData.nodeType, true);
                 tempNode.GUID = nodeData.Guid;
                 targetView.AddElement(tempNode);
 
@@ -137,7 +137,21 @@ namespace FD.Program.Runtime
                 nodePorts.ForEach(x =>
                 {
 
-                    targetView.AddStatePort(tempNode, x.portName);
+                    if(container.editorGrahpData.Find(y => y.Guid == x.baseNodeGuid).nodeType != Type.FAED_AINodeType.BoolNode)
+                    {
+
+
+                        targetView.AddStatePort(tempNode, x.portName);
+
+                    }
+                    else
+                    {
+
+                        targetView.AddPort(tempNode, "true");
+                        targetView.AddPort(tempNode, "false");
+
+                    }
+
 
                 });
 

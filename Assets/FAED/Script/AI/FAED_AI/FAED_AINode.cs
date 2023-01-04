@@ -300,6 +300,13 @@ namespace FD.AI.Node
 
         }
 
+        public void ChangeBoolState(string name, bool boolState)
+        {
+
+            core.boolNodes.FindAll(x => x.name == name).ForEach(y => y.boolState = boolState);
+
+        }
+
     }
 
 }

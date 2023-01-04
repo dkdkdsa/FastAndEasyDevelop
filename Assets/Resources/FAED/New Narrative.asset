@@ -13,28 +13,12 @@ MonoBehaviour:
   m_Name: New Narrative
   m_EditorClassIdentifier: 
   links:
-  - baseNodeGuid: 7b03b70c-ea64-4923-b33a-3c966e0dac29
-    portName: State 2
-    targetNodeGuid: b34cc4b8-3051-4581-854a-6f436ec2544a
-    portCount: 1
-  - baseNodeGuid: 7b03b70c-ea64-4923-b33a-3c966e0dac29
-    portName: State 1
-    targetNodeGuid: e923cd8d-eb9c-4206-a45a-e49b3fbdc9c7
-    portCount: 0
-  - baseNodeGuid: f7954332-c6de-440f-9b8f-3fe3e4064fbf
+  - baseNodeGuid: 0a125785-d562-4795-9724-5c2202335fa0
     portName: Next
-    targetNodeGuid: 7b03b70c-ea64-4923-b33a-3c966e0dac29
+    targetNodeGuid: 9af6a64c-5657-41d4-93ad-c39222af4a46
     portCount: 0
   editorGrahpData:
-  - Guid: 7b03b70c-ea64-4923-b33a-3c966e0dac29
+  - Guid: 9af6a64c-5657-41d4-93ad-c39222af4a46
     dialogueText: MainStateMachine
-    position: {x: 344.8, y: 191.2}
+    position: {x: 75.2, y: -7.999999}
     nodeType: 1
-  - Guid: e923cd8d-eb9c-4206-a45a-e49b3fbdc9c7
-    dialogueText: Action
-    position: {x: 655.2, y: -11.999999}
-    nodeType: 0
-  - Guid: b34cc4b8-3051-4581-854a-6f436ec2544a
-    dialogueText: Action
-    position: {x: 833.6, y: 243.2}
-    nodeType: 0
