@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using FD.Dev;
 using FD.Program.Editer.Runtime.Data;
 using FD.Program.Editer.SO;
@@ -209,3 +210,5 @@ namespace FD.Program.Runtime
     }
 
 }
+
+#endif
