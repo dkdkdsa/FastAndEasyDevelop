@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clipList:
   - clipName: Test
-    clip: {fileID: 0}
-    volume: 1
+    clip: {fileID: 8300000, guid: f505945c484ab43479f9231275b1e088, type: 3}
+    volume: 0.332
     pitch: 1
-    playOnAwake: 1
+    playOnAwake: 0
     loop: 1
   - clipName: Test2
-    clip: {fileID: 0}
-    volume: 1
+    clip: {fileID: 8300000, guid: 731414fec4697394ba1f86a3bd1e0c8a, type: 3}
+    volume: 0.413
     pitch: 1
     playOnAwake: 0
     loop: 0

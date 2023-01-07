@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FD.Program.Type;
+using UnityEngine.Events;
 
 namespace FD.Program.Class
 {
@@ -25,6 +27,36 @@ namespace FD.Program.Class
         [Range(0f, 1f)] public float pitch = 1f;
         public bool playOnAwake;
         public bool loop;
+
+    }
+
+    [System.Serializable]
+    public class FAED_Keys
+    {
+
+        public KeyCode key;
+        public FAED_KeyEventType inputType;
+        public UnityEvent inputEvent;
+
+    }
+
+    [System.Serializable]
+    public class FAED_Mouse
+    {
+
+        public FAED_MouseType button;
+        public FAED_ButtonEventType inputType;
+        public UnityEvent inputEvent;
+
+    }
+
+    [System.Serializable]
+    public class FAED_Axis
+    {
+
+        public FAED_AxisType axis;
+        public FAED_AxisEventType inputType;
+        public UnityEvent<float> inputEvent;
 
     }
 
