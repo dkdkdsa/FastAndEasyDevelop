@@ -16,10 +16,12 @@ namespace FD.Program.Core
         private static FAED_SaveManager saveManager;
         private static FAED_DelayInvoke feature;
         private static FAED_Random random;
+        private static FAED_SoundManager soundManager;
 
         public static FAED_Core Instance { get { Init(); return instance; } }
         public static FAED_PoolManager Pooling { get { Init(); return poolManager; } }
         public static FAED_SaveManager SaveData { get { Init(); return saveManager; } }
+        public static FAED_SoundManager SoundManager { get { Init(); return soundManager; } }
         public static FAED_DelayInvoke Feature { get { Init(); return feature; } }
         public static FAED_Random Random { get { Init(); return random; } }
 
@@ -87,6 +89,25 @@ namespace FD.Program.Core
 
                 }
 
+
+
+            }
+
+            GameObject soundManagerObj = GameObject.Find("@FAED_SoundManager");
+            if(soundManagerObj == null)
+            {
+
+                var data = Resources.Load<FAED_Setting>("FAED/SettingData").soundList;
+
+                GameObject go = new GameObject();
+                go.name = "@FAED_SoundManager";
+
+                if(data != null)
+                {
+
+                    soundManager = new FAED_SoundManager(data, go.transform);
+
+                }
 
 
             }

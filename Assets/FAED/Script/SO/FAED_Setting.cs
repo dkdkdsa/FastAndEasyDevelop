@@ -9,6 +9,7 @@ namespace FD.Program.SO
     {
 
         public FAED_PoolingData poolData;
+        public FAED_SoundList soundList;
 
     }
 

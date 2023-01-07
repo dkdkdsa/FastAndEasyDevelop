@@ -4,6 +4,8 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using FD.Program.Pool;
+using FD.Program.SO;
+using System.Linq;
 
 namespace FD.Program.Managers
 {
@@ -124,6 +126,114 @@ namespace FD.Program.Managers
 
     }
     
+    public class FAED_SoundManager
+    {
+
+        private FAED_SoundList soundList;
+        private Transform parent;
+        public Stack<FAED_ManageingSource> ch = new Stack<FAED_ManageingSource>();
+        public List<FAED_ManageingSource> playingList = new List<FAED_ManageingSource>();
+
+        public FAED_SoundManager(FAED_SoundList list, Transform parent)
+        {
+
+            soundList = list;
+            this.parent = parent;
+
+            for(int i = 0; i > soundList.clipList.Count; i++)
+            {
+
+                GameObject go = new GameObject();
+                go.gameObject.name = "@FAED_Ch";
+                go.AddComponent<AudioSource>().playOnAwake = false;
+                go.GetComponent<AudioSource>().loop = false;
+                go.AddComponent<FAED_ManageingSource>().Setting(this, go.GetComponent<AudioSource>(), soundList.clipList[i].clipName);
+                ch.Push(go.GetComponent<FAED_ManageingSource>());
+                go.transform.SetParent(parent);
+
+            }
+
+            var awakeList = soundList.clipList.FindAll(x => x.playOnAwake == true).ToList();
+            
+            foreach(var item in awakeList)
+            {
+
+                FAED_ManageingSource go = ch.Pop();
+                AudioSource source = go.GetComponent<AudioSource>();
+                if (item.loop == true) source.loop = true;
+
+                source.clip = item.clip;
+
+                source.Play();
+
+                playingList.Add(go);
+
+            }
+
+        }
+        
+        public void PlaySound(string name)
+        {
+
+            if (soundList.clipList.Find(x => x.clipName == name) == null) return;
+
+            var source = soundList.clipList.Where(x => x.clipName == name).First();
+
+            FAED_ManageingSource go;
+
+            if (ch.Count == 0)
+            {
+
+                go = CreateCh(name);
+
+            }
+            else
+            {
+
+                go = ch.Pop();
+
+            }
+
+            AudioSource audio = go.GetComponent<AudioSource>();
+
+            audio.clip = source.clip;
+
+            if (source.loop == true) audio.loop = true;
+
+            audio.Play();
+
+            playingList.Add(go);
+
+        }
+
+        private FAED_ManageingSource CreateCh(string name)
+        {
+
+            GameObject go = new GameObject();
+            go.gameObject.name = "@FAED_Ch";
+            go.AddComponent<AudioSource>().playOnAwake = false;
+            go.GetComponent<AudioSource>().loop = false;
+            go.AddComponent<FAED_ManageingSource>().Setting(this, go.GetComponent<AudioSource>(), name);
+            ch.Push(go.GetComponent<FAED_ManageingSource>());
+            go.transform.SetParent(parent);
+
+            return go.GetComponent<FAED_ManageingSource>();
+
+        }
+
+        public void Stop(string name)
+        {
+
+            if (playingList.Find(x => x.clipName == name) == null) return;
+
+            var go = playingList.Where(x => x.clipName == name).First();
+
+            go.GetComponent<AudioSource>().Stop();
+
+        }
+
+    }
+
 }
 
 
