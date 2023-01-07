@@ -140,7 +140,7 @@ namespace FD.Program.Managers
             soundList = list;
             this.parent = parent;
 
-            for(int i = 0; i > soundList.clipList.Count; i++)
+            for(int i = 0; i < soundList.clipList.Count; i++)
             {
 
                 GameObject go = new GameObject();
@@ -161,12 +161,18 @@ namespace FD.Program.Managers
                 FAED_ManageingSource go = ch.Pop();
                 AudioSource source = go.GetComponent<AudioSource>();
                 if (item.loop == true) source.loop = true;
+                else source.loop = false;   
 
+                go.clipName = item.clipName;
                 source.clip = item.clip;
+                source.volume = item.volume;
+                source.pitch = item.pitch;
 
                 source.Play();
 
                 playingList.Add(go);
+
+                go.isStack = false;
 
             }
 
@@ -197,9 +203,13 @@ namespace FD.Program.Managers
             AudioSource audio = go.GetComponent<AudioSource>();
 
             audio.clip = source.clip;
+            audio.volume = source.volume;
+            audio.pitch = source.pitch;
 
             if (source.loop == true) audio.loop = true;
+            else audio.loop = false;
 
+            go.isStack = false;
             audio.Play();
 
             playingList.Add(go);
@@ -229,6 +239,10 @@ namespace FD.Program.Managers
             var go = playingList.Where(x => x.clipName == name).First();
 
             go.GetComponent<AudioSource>().Stop();
+
+            go.isStack = true;
+
+            ch.Push(go);
 
         }
 

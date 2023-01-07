@@ -28,8 +28,8 @@ public class FAED_ManageingSource : MonoBehaviour
         {
 
             manager.ch.Push(this);
-            isStack = false;
             manager.playingList.Remove(this);
+            isStack = true;
 
         }
 

@@ -102,6 +102,8 @@ namespace FD.Program.Core
                 GameObject go = new GameObject();
                 go.name = "@FAED_SoundManager";
 
+                DontDestroyOnLoad(go);
+
                 if(data != null)
                 {
 

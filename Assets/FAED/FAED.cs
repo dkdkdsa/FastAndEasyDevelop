@@ -83,6 +83,18 @@ namespace FD.Dev
             return FAED_Core.Random.RandomValueEnum<T>();
 
         } 
+        public static void PlaySound(string name)
+        {
+
+            FAED_Core.SoundManager.PlaySound(name);
+
+        }
+        public static void StopSound(string name)
+        {
+
+            FAED_Core.SoundManager.Stop(name);
+
+        }
 
     }
 
