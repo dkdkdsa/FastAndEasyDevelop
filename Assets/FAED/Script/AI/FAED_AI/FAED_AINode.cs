@@ -210,7 +210,9 @@ namespace FD.AI.Node
         [SerializeField, HideInInspector] private string currentState;
         [SerializeField, HideInInspector] private List<string> states; 
         [SerializeField, HideInInspector] private FAED_DialougeContainer data;
-        
+
+        public string CurrentState => currentState;
+
         public FAED_StateMachine(FAED_DialougeContainer data)
         {
 

@@ -135,6 +135,9 @@ namespace FD.Program.Runtime
                 targetView.AddElement(tempNode);
 
                 var nodePorts = container.links.Where(x => x.baseNodeGuid == nodeData.Guid).ToList();
+
+                nodePorts.OrderBy(x => x.portCount);
+
                 nodePorts.ForEach(x =>
                 {
 

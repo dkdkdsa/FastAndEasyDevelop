@@ -50,6 +50,13 @@ namespace FD.AI
 
         }
 
+        public string GetCurrentState()
+        {
+
+            return machine.CurrentState;
+
+        }
+
     }
 
 }
