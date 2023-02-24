@@ -27,8 +27,18 @@ public class Test : MonoBehaviour
     [SerializeField] private FAED_AI aI;
     [SerializeField] private SpriteRenderer sprite;
 
+    private void Awake()
+    {
+
+        Testasdf a = Resources.Load<Testasdf>("asdf");
+        a.A();
+
+    }
+
     private void Update()
     {
+
+        return;
 
         if (Input.GetKeyDown(KeyCode.A))
         {

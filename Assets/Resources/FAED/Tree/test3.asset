@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e6d1393fef13854c93c0f25cda7ea12, type: 3}
+  m_Name: test3
+  m_EditorClassIdentifier: 
+  links:
+  - baseGUID: c7fd9e61-af24-4589-8db9-aa47757b11a9
+    portName: 1
+    targetGUID: 917ab2de-56db-405b-97ec-8ca9a49eac99
+  - baseGUID: 917ab2de-56db-405b-97ec-8ca9a49eac99
+    portName: Next
+    targetGUID: 978f4abe-b091-41f0-84dd-6d0d7e049fee
+  - baseGUID: 6d759138-4d6a-4788-82d5-1a6b0b30746d
+    portName: 1
+    targetGUID: c7fd9e61-af24-4589-8db9-aa47757b11a9
+  nodes:
+  - GUID: 6d759138-4d6a-4788-82d5-1a6b0b30746d
+    text: Root
+    pos: {x: -12, y: 0}
+    type: 0
+    ports:
+    - 1
+    inputPorts: []
+  - GUID: c7fd9e61-af24-4589-8db9-aa47757b11a9
+    text: s1
+    pos: {x: 240, y: 0}
+    type: 1
+    ports:
+    - 1
+    inputPorts:
+    - Input
+  - GUID: 917ab2de-56db-405b-97ec-8ca9a49eac99
+    text: 1
+    pos: {x: 479, y: 0}
+    type: 2
+    ports:
+    - Next
+    inputPorts:
+    - Before
+  - GUID: 978f4abe-b091-41f0-84dd-6d0d7e049fee
+    text: 2
+    pos: {x: 704, y: 0}
+    type: 2
+    ports:
+    - Next
+    inputPorts:
+    - Before
