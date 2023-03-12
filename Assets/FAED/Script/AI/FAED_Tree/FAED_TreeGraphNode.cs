@@ -1,14 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using FD.UI;
-using System;
-using System.Linq;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
-
+#if UNITY_EDITOR
 namespace FD.AI.Tree.Node
 {
 
@@ -29,6 +19,8 @@ namespace FD.AI.Tree.Node
         }
     }
 
+#endif
+
     public enum FAED_TreeNodeType
     {
 
@@ -40,4 +32,3 @@ namespace FD.AI.Tree.Node
     }
 
 }
-

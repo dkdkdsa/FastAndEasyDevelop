@@ -21,6 +21,8 @@ public enum SS
     J,
               
 }
+
+[ASDFFF("asdf")]
 public class Test : MonoBehaviour
 {
 

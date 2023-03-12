@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,8 +26,16 @@ namespace FD.Program.Editer
 
             }
 
+            if (GUILayout.Button("Reset"))
+            {
+
+                aI.ResetAI();
+
+            }
+
         }
 
     }
 
 }
+#endif

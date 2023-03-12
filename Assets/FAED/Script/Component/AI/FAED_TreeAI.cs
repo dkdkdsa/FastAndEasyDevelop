@@ -12,7 +12,7 @@ namespace FD.AI
     {
 
         [SerializeField] private FAED_TreeData data;
-        [SerializeField] private FAED_TreeAIMain main;
+        [SerializeField, HideInInspector] private FAED_TreeAIMain main;
 
 
         [HideInInspector] public UnityEvent updateEvent;
@@ -35,17 +35,24 @@ namespace FD.AI
         public void Setting()
         {
 
-            for(int i = 0; i < transform.childCount; i++)
+            if(transform.Find("Root") != null) 
             {
 
-                DestroyImmediate(transform.GetChild(i).gameObject);
+                DestroyImmediate(transform.Find("Root").gameObject);
 
             }
-
             main = new FAED_TreeAIMain(data, this);
 
         }
 
+        public void ResetAI()
+        {
+
+            DestroyImmediate(transform.Find("Root").gameObject);
+            data = null;
+            main = null;
+
+        }
     }
 
 }
