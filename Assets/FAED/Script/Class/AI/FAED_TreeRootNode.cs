@@ -52,7 +52,7 @@ namespace FD.AI.Tree.Program
 
             }
 
-            //ExecuteEvent();
+            ExecuteEvent();
 
         }
 
