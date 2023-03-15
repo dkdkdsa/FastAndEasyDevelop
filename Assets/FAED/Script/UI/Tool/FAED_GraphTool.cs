@@ -87,6 +87,15 @@ namespace FD.UI.Tool
 
         }
 
+        protected Node AddNode(Node node)
+        {
+
+            graphView.AddNode(node);
+
+            return node;
+
+        }
+
     }
 
     public static class FAED_GraphViewSupportTool
