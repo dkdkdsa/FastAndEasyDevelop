@@ -13,7 +13,7 @@ namespace FD.UI.Tool
     public class FAED_GraphViewTool : FAED_GraphViewWindow
     {
 
-        public T CreateNode<T>(string titleText, Vector2 size, bool moveAble = true, bool deleteAble = true) where T : Node, new()
+        protected T CreateNode<T>(string titleText, Vector2 size, bool moveAble = true, bool deleteAble = true) where T : Node, new()
         {
 
             T node = new T();
@@ -42,7 +42,7 @@ namespace FD.UI.Tool
 
         }
 
-        public T CreateNode<T>(T nodeObject, Vector2 size, string titleText, bool moveAble = true, bool deleteAble = true) where T : Node
+        protected T CreateNode<T>(T nodeObject, Vector2 size, string titleText, bool moveAble = true, bool deleteAble = true) where T : Node
         {
 
             nodeObject.title = titleText;
@@ -68,16 +68,34 @@ namespace FD.UI.Tool
             return nodeObject;
 
         }
+        
+        protected T AddToolBarElement<T>(T child) where T : VisualElement
+        {
+
+            toolbar.Add(child);
+
+            return child;
+
+        }
+
+        protected TextField CreateTextField(string label = "")
+        {
+
+            TextField textField = new TextField(label);
+
+            return textField;
+
+        }
 
     }
 
     public static class FAED_GraphViewSupportTool
     {
 
-        public static TextField AddTextField(this VisualElement element)
+        public static TextField AddTextField(this VisualElement element, string label = "")
         {
 
-            TextField textField = new TextField();
+            TextField textField = new TextField(label);
 
             element.Add(textField);
 
