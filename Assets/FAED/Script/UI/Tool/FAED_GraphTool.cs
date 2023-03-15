@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using System;
 
 namespace FD.UI.Tool
 {
@@ -73,16 +74,12 @@ namespace FD.UI.Tool
     public static class FAED_GraphViewSupportTool
     {
 
-        public static TextField AddTextField(this Node node)
+        public static TextField AddTextField(this VisualElement element)
         {
 
             TextField textField = new TextField();
-            textField.SetValueWithoutNotify(node.title);
 
-            node.mainContainer.Add(textField);
-
-            node.RefreshExpandedState();
-            node.RefreshPorts();
+            element.Add(textField);
 
             return textField;
 
@@ -106,7 +103,7 @@ namespace FD.UI.Tool
 
         }
 
-        public static void AddNameChangeEvent(this Node node)         
+        public static void AddNameChangeEvent(this Node node)
         {
 
             TextField textField = node.mainContainer.Q<TextField>();
@@ -114,7 +111,9 @@ namespace FD.UI.Tool
             if(textField == null)
             {
 
-                node.AddTextField().AddNameChangeEvnet(node);
+                node.mainContainer.AddTextField().AddNameChangeEvnet(node);
+                node.RefreshExpandedState();
+                node.RefreshPorts();
                 return;
 
             }
@@ -123,6 +122,7 @@ namespace FD.UI.Tool
             {
 
                 node.title = evt.newValue;
+
             });
 
             textField.SetValueWithoutNotify(node.title);
@@ -133,6 +133,42 @@ namespace FD.UI.Tool
 
 
         }
+
+        public static Port AddPort(this Node node, string titleText, Direction direction, Port.Capacity capacity, Orientation orientation = Orientation.Horizontal)
+        {
+
+            Port port = node.InstantiatePort(Orientation.Horizontal, direction, capacity, typeof(float));
+
+            port.title = titleText;
+
+            if (direction == Direction.Input)
+            {
+
+                node.inputContainer.Add(port);
+
+            }
+            else
+            {
+
+                node.outputContainer.Add(port);
+
+            }
+
+            return port;
+
+        }
+
+        public static Button AddButton(this VisualElement element, Action clickEvnet)
+        {
+
+            Button btn = new Button(clickEvnet);
+
+            element.Add(btn);
+
+            return btn;
+
+        }
+
 
     }
 
