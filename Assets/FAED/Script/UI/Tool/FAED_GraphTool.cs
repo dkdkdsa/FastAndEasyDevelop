@@ -139,7 +139,8 @@ namespace FD.UI.Tool
 
             Port port = node.InstantiatePort(Orientation.Horizontal, direction, capacity, typeof(float));
 
-            port.title = titleText;
+            port.portName = titleText;
+            port.name = titleText;
 
             if (direction == Direction.Input)
             {
@@ -153,6 +154,9 @@ namespace FD.UI.Tool
                 node.outputContainer.Add(port);
 
             }
+
+            node.RefreshExpandedState();
+            node.RefreshPorts();
 
             return port;
 
