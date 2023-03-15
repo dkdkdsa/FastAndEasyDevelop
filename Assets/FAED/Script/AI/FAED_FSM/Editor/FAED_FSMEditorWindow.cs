@@ -33,7 +33,9 @@ namespace FD.AI.FSM.Window
 
             #region 파일 이름 입력하는곳
 
-            AddToolBarElement(CreateTextField());
+            toolbar.AddTextField("FileName :");
+            toolbar.AddButton(() => { }).text = "SaveFile";
+            toolbar.AddButton(() => { }).text = "LoadFile";
 
             #endregion
 
