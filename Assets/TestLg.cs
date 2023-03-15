@@ -9,11 +9,20 @@ public class TestLg : FAED_TreeActionNode
     [SerializeField] private string lg;
     [SerializeField] private FAED_TreeNodeState state = FAED_TreeNodeState.Success;
 
+    public override void UpdateEvent()
+    {
+
+        base.UpdateEvent();
+
+        Debug.Log(123);
+
+    }
+
     public override void Behavior()
     {
 
         Debug.Log(lg);
-        Complete(state);
+        //Complete(state);
 
     }
 

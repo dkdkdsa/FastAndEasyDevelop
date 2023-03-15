@@ -37,13 +37,8 @@ namespace FD.AI.Tree.Program
 
         }
 
-        public virtual void UpdateEvent()
-        {
-            
-
-
-        }
-
+        public virtual void UpdateEvent() { }
+        
         private void Update()
         {
 

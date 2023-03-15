@@ -46,6 +46,7 @@ namespace FD.AI.Tree.Program
         public override void Event()
         {
 
+
             if (currentNum == nodeActions.Count)
             {
 
@@ -57,7 +58,6 @@ namespace FD.AI.Tree.Program
             currentAction = nodeActions[currentNum];
 
             ai.updateEvent.RemoveAllListeners();
-
             ai.updateEvent.AddListener(currentAction.UpdateEvent);
 
             currentNum++;

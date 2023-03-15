@@ -76,7 +76,6 @@ namespace FD.AI.Tree.Program
 
             currentAction.Execute();
 
-
         }
 
 

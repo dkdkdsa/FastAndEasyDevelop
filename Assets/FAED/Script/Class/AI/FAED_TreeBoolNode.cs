@@ -25,12 +25,16 @@ namespace FD.AI.Tree.Program
             {
 
                 trueAction.Execute();
+                ai.updateEvent.RemoveAllListeners();
+                ai.updateEvent.AddListener(trueAction.UpdateEvent);
 
             }
             else
             {
 
                 falseAction.Execute();
+                ai.updateEvent.RemoveAllListeners();
+                ai.updateEvent.AddListener(falseAction.UpdateEvent);
 
             }
 
