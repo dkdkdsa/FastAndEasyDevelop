@@ -6,6 +6,7 @@ using FD.UI.Tool;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using System;
+using UnityEngine.UIElements;
 
 namespace FD.AI.FSM.Window
 {
@@ -49,8 +50,16 @@ namespace FD.AI.FSM.Window
 
             FAED_FSMNode node = new FAED_FSMNode(Guid.NewGuid().ToString(), "StateNode");
 
-            node.AddButton(() => { });
             CreateNode(node,new Vector2(300, 300), node.text);
+            node.titleContainer.AddButton(() => 
+            {
+
+                int count = node.outputContainer.Query("connector").ToList().Count;
+                var port = node.AddPort(count.ToString(), Direction.Output, Port.Capacity.Single);
+                port.AddButton(() => node.inputContainer.Remove(port)).text = "X";
+
+            }).text = "+";
+            node.AddPort("input", Direction.Input, Port.Capacity.Multi);
 
             AddNode(node);
 
