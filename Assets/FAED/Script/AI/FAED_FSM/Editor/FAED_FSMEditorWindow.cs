@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using System;
 using UnityEngine.UIElements;
+using System.Linq;
 
 namespace FD.AI.FSM.Window
 {
@@ -55,14 +56,34 @@ namespace FD.AI.FSM.Window
             {
 
                 int count = node.outputContainer.Query("connector").ToList().Count;
-                var port = node.AddPort(count.ToString(), Direction.Output, Port.Capacity.Single);
-                port.AddButton(() => node.inputContainer.Remove(port)).text = "X";
+                var port = node.AddPort((count + 1).ToString(), Direction.Output, Port.Capacity.Single);
+                port.AddButton(() => RemovePort(node, port, Direction.Output)).text = "X";
 
             }).text = "+";
             node.AddPort("input", Direction.Input, Port.Capacity.Multi);
 
             AddNode(node);
 
+
+
+        }
+
+        protected override void RemovePort(UnityEditor.Experimental.GraphView.Node node, Port port, Direction direction)
+        {
+
+            base.RemovePort(node, port, direction);
+
+            var item = node.outputContainer.Query<Port>().ToList().OrderBy(x => int.Parse(x.portName)).ToList();
+
+            for (int i = 0; i < item.Count; i++)
+            {
+
+                item[i].portName = (i + 1).ToString();
+
+            }
+
+            node.RefreshPorts();
+            node.RefreshExpandedState();
 
         }
 

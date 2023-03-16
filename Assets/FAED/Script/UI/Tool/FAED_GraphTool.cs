@@ -6,6 +6,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System;
+using System.Linq;
 
 namespace FD.UI.Tool
 {
@@ -93,6 +94,38 @@ namespace FD.UI.Tool
             graphView.AddNode(node);
 
             return node;
+
+        }
+
+        protected virtual void RemovePort(UnityEditor.Experimental.GraphView.Node node, Port port, Direction direction)
+        {
+
+            var targetEdge = graphView.edges.ToList().Where(x => x.output.portName == port.portName && x.output.node == port.node);
+
+            if (targetEdge.Any())
+            {
+
+                var edge = targetEdge.First();
+                edge.input.Disconnect(edge);
+                graphView.RemoveElement(targetEdge.First());
+
+            }
+
+            if(direction == Direction.Input)
+            {
+
+                node.inputContainer.Remove(port);
+
+            }
+            else
+            {
+
+                node.outputContainer.Remove(port);
+
+            }
+
+            node.RefreshPorts();
+            node.RefreshExpandedState();
 
         }
 
