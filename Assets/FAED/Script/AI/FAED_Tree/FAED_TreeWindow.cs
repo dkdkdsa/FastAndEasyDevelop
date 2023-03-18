@@ -14,7 +14,7 @@ using FD.AI.Tree.Node;
 namespace FD.AI.Tree
 {
 
-    public class FAED_TreeWindow : FAED_GraphViewWindow
+    public class FAED_TreeWindow : FAED_GraphViewWindow<FAED_TreeGrahpView>
     {
 
         private FAED_TreeGraph treeGraph;
@@ -180,6 +180,42 @@ namespace FD.AI.Tree
             treeGraph = null;
 
         }
+
+    }
+
+    public class FAED_TreeGrahpView : FAED_GraphView
+    {
+
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+
+            var compatiblePorts = new List<Port>();
+
+            ports.ForEach(funcCall: (port) =>
+            {
+
+                if (startPort != port && startPort.node != port.node)
+                {
+
+                    var start = startPort.node.Q<FAED_TreeGraphNode>().type;
+                    var end = port.node.Q<FAED_TreeGraphNode>().type;
+
+                    if (!((start == FAED_TreeNodeType.Tree || start == FAED_TreeNodeType.If) && end == FAED_TreeNodeType.Sequence))
+                    {
+
+                        compatiblePorts.Add(port);
+
+                    }
+
+
+                }
+
+            });
+
+            return compatiblePorts;
+
+        }
+
 
     }
 

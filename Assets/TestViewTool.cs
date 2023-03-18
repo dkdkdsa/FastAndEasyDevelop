@@ -5,9 +5,11 @@ using FD.UI.Tool;
 using UnityEditor;
 using FD.AI.Tree;
 using UnityEditor.Experimental.GraphView;
+using FD.UI;
 
-public class TestViewTool : FAED_GraphViewTool
+public class TestViewTool : FAED_GraphViewTool<FAED_GraphView>
 {
+
 
     [MenuItem("FAED_AI/Test")]
     private static void CreateWindows()

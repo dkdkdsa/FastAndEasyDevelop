@@ -10,10 +10,10 @@ using FD.AI.Tree.Node;
 
 namespace FD.UI
 {
-    public class FAED_GraphViewWindow : EditorWindow
+    public class FAED_GraphViewWindow<T> : EditorWindow where T : GraphView, new()
     {
 
-        protected FAED_GraphView graphView;
+        protected T graphView;
         protected Toolbar toolbar;
         protected MiniMap miniMap;
 
@@ -30,7 +30,7 @@ namespace FD.UI
         private void CreateGraphView(string graphViewName)
         {
 
-            graphView = new FAED_GraphView() { name = graphViewName };
+            graphView = new T() { name = graphViewName };
 
             graphView.StretchToParentSize();
             rootVisualElement.Add(graphView);
@@ -71,36 +71,6 @@ namespace FD.UI
             var guid = new GridBackground();
             Insert(index: 0, guid);
             guid.StretchToParentSize();
-
-        }
-
-        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
-        {
-
-            var compatiblePorts = new List<Port>();
-
-            ports.ForEach(funcCall: (port) =>
-            {
-
-                if (startPort != port && startPort.node != port.node)
-                {
-
-                    var start = startPort.node.Q<FAED_TreeGraphNode>().type;
-                    var end = port.node.Q<FAED_TreeGraphNode>().type;
-
-                    if(!((start == FAED_TreeNodeType.Tree || start == FAED_TreeNodeType.If) && end == FAED_TreeNodeType.Sequence))
-                    {
-
-                        compatiblePorts.Add(port);
-
-                    }
-
-
-                }
-
-            });
-
-            return compatiblePorts;
 
         }
 

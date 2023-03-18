@@ -11,7 +11,7 @@ using System.Linq;
 namespace FD.UI.Tool
 {
 
-    public class FAED_GraphViewTool : FAED_GraphViewWindow
+    public class FAED_GraphViewTool<MainT> : FAED_GraphViewWindow<MainT> where MainT : FAED_GraphView, new()
     {
 
         protected T CreateNode<T>(string titleText, Vector2 size, bool moveAble = true, bool deleteAble = true) where T : Node, new()
