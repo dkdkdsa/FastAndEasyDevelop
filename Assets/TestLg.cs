@@ -12,9 +12,7 @@ public class TestLg : FAED_TreeActionNode
     public override void UpdateEvent()
     {
 
-        base.UpdateEvent();
 
-        Debug.Log(123);
 
     }
 
@@ -22,7 +20,7 @@ public class TestLg : FAED_TreeActionNode
     {
 
         Debug.Log(lg);
-        //Complete(state);
+        Complete(state);
 
     }
 

@@ -148,20 +148,24 @@ namespace FD.AI.Tree.Program
                         {
 
                             FAED_SettingTree cntStr = scriptList.Find(y => y.GUID == x.targetGUID).obj.GetComponent<FAED_SettingTree>();
-                            cntStr.Setting(this, aI, x.targetGUID);
+                            //cntStr.Setting(this, aI, x.targetGUID);
                             
                             if(x.portName == "NextTrue")
                             {
 
-                                obj.trueAction = cntStr;
-                                cntStr.SettingRootNode(obj.rootNode);
+                                //obj.trueAction.Add(cntStr);
+                                //cntStr.SettingRootNode(obj);
+
+                                FindAllNode(obj, x.targetGUID, ref obj.trueAction);
 
                             }
                             else
                             {
 
-                                obj.falseAction = cntStr;
-                                cntStr.SettingRootNode(obj.rootNode);
+                                //obj.falseAction.Add(cntStr);
+                                //cntStr.SettingRootNode(obj);
+
+                                FindAllNode(obj, x.targetGUID, ref obj.falseAction);
 
                             }
 
@@ -194,6 +198,26 @@ namespace FD.AI.Tree.Program
                 if (data.nodes.Find(x => x.GUID == guid).type == Node.FAED_TreeNodeType.If) return;
 
                 FindAllNode(root, data.links.Find(x => x.baseGUID == guid).targetGUID);
+
+            }
+
+        }
+
+        private void FindAllNode<T>(T root, string guid, ref List<FAED_TreeAINode> list) where T : FAED_TreeAINode, IFAED_StateTreeNode<FAED_TreeAINode>
+        {
+
+            var cntStr = scriptList.Find(x => x.GUID == guid).obj.GetComponent<FAED_SettingTree>();
+            list.Add(cntStr);
+            cntStr.Setting(this, aI, guid);
+            cntStr.SettingRootNode(root);
+
+            if (data.links.Find(x => x.baseGUID == guid) != null)
+            {
+
+                if (data.nodes.Find(x => x.GUID == guid).type == Node.FAED_TreeNodeType.Sequence) return;
+                if (data.nodes.Find(x => x.GUID == guid).type == Node.FAED_TreeNodeType.If) return;
+
+                FindAllNode(root, data.links.Find(x => x.baseGUID == guid).targetGUID, ref list);
 
             }
 

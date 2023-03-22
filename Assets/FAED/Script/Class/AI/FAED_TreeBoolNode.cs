@@ -5,18 +5,15 @@ using UnityEngine;
 namespace FD.AI.Tree.Program
 {
 
-    public abstract class FAED_TreeBoolNode : FAED_SettingTree
+    public abstract class FAED_TreeBoolNode : FAED_SettingTree, IFAED_StateTreeNode<FAED_TreeAINode>
     {
 
-        public IFAED_TreeAIRoot trueAction;
-        public IFAED_TreeAIRoot falseAction;
+        [HideInInspector] public List<FAED_TreeAINode> trueAction;
+        [HideInInspector] public List<FAED_TreeAINode> falseAction;
 
-        public override void Complete(FAED_TreeNodeState state)
-        {
-            
-
-
-        }
+        public IFAED_TreeAIRoot currentAction { get; set; }
+        public List<FAED_TreeAINode> nodeActions { get; set; }
+        public int currentNum { get; set; }
 
         public override void Event()
         {
@@ -24,23 +21,74 @@ namespace FD.AI.Tree.Program
             if (Comparison())
             {
 
-                trueAction.Execute();
-                ai.updateEvent.RemoveAllListeners();
-                ai.updateEvent.AddListener(trueAction.UpdateEvent);
+                nodeActions = trueAction;
+
+            }
+            else
+            {
+                
+                nodeActions = falseAction;
+
+            }
+
+            BoolEx();
+
+        }
+
+        public abstract bool Comparison();
+
+        //¿Ï·á ¸®Äù½ºÆ® º¸³»´Â ³à¼®
+        public override void Complete(FAED_TreeNodeState state)
+        {
+
+            rootNode.CompleteExecution(state);
+
+            currentNum = 0;
+
+        }
+
+
+        //¿Ï·á ¸®Äù½ºÆ® ¹Þ´Â ³à¼®
+        public void CompleteExecution(FAED_TreeNodeState state)
+        {
+
+
+            if (state == FAED_TreeNodeState.Success)
+            {
+
+                BoolEx();
 
             }
             else
             {
 
-                falseAction.Execute();
-                ai.updateEvent.RemoveAllListeners();
-                ai.updateEvent.AddListener(falseAction.UpdateEvent);
+                Complete(state);
 
             }
 
         }
 
-        public abstract bool Comparison();
+        public void BoolEx()
+        {
+
+            if (currentNum == nodeActions.Count)
+            {
+
+                Complete(FAED_TreeNodeState.Success);
+                return;
+
+            }
+
+            currentAction = nodeActions[currentNum];
+
+            ai.updateEvent.RemoveAllListeners();
+            ai.updateEvent.AddListener(currentAction.UpdateEvent);
+
+            currentNum++;
+
+            currentAction.Execute();
+
+        }
 
     }
 
