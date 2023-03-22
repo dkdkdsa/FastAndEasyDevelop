@@ -25,6 +25,14 @@ namespace FD.Program.Runtime
 
             }
 
+
+            if (Directory.Exists(string.Format("{0}/{1}", Application.dataPath, @"\Resources\FAED\Tree")) == false)
+            {
+
+                Directory.CreateDirectory(string.Format("{0}/{1}", Application.dataPath, @"\Resources\FAED\Tree"));
+
+            }
+
         }
 
     }

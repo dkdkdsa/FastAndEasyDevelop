@@ -8,7 +8,7 @@ using UnityEditorInternal;
 public class AnimeGraphTest : EditorWindow
 {
 
-    private static AnimeGraphTest ins;
+    public static AnimeGraphTest ins;
 
     [MenuItem("FAED_AI/TestAnime")]
     private static void SER()
@@ -19,7 +19,7 @@ public class AnimeGraphTest : EditorWindow
 
     }
 
-    private void OnGUI()
+    private void OnEnable()
     {
 
         var graph = CreateInstance<Graph>();
@@ -34,11 +34,12 @@ public class AnimeGraphTest : EditorWindow
 
     }
 
-    public class FTestGraphGUI : GraphGUI
-    {
+}
 
 
+public class FTestGraphGUI : GraphGUI
+{
 
-    }
+
 
 }
