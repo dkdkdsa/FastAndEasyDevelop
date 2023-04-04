@@ -20,7 +20,7 @@ public class TestLg : FAED_TreeActionNode
     {
 
         Debug.Log(lg);
-        Complete(state);
+        //Complete(state);
 
     }
 
