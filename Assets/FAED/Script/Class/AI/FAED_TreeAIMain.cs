@@ -37,26 +37,26 @@ namespace FD.AI.Tree.Program
 
                 }
 
-                if(item.type == Node.FAED_TreeNodeType.Root)
+                if(item.type == Nodes.FAED_TreeNodeType.Root)
                 {
 
                     rootNode = obj.AddComponent<FAED_TreeRootNode>();
                     
 
                 }
-                else if(item.type == Node.FAED_TreeNodeType.Sequence)
+                else if(item.type == Nodes.FAED_TreeNodeType.Sequence)
                 {
 
                     obj.AddComponent<FAED_Sequence>();
 
                 }
-                else if(item.type == Node.FAED_TreeNodeType.If)
+                else if(item.type == Nodes.FAED_TreeNodeType.If)
                 {
 
                     obj.name = $"{obj.name}(If)";
 
                 }
-                else if (item.type == Node.FAED_TreeNodeType.Tree)
+                else if (item.type == Nodes.FAED_TreeNodeType.Tree)
                 {
 
                     obj.name = $"{obj.name}(Tree)";
@@ -91,7 +91,7 @@ namespace FD.AI.Tree.Program
             foreach(var item in data.nodes)
             {
 
-                if(item.type == Node.FAED_TreeNodeType.Root)
+                if(item.type == Nodes.FAED_TreeNodeType.Root)
                 {
 
                     FAED_TreeRootNode obj = aI.transform.Find(item.text).gameObject.GetComponent<FAED_TreeRootNode>();
@@ -114,7 +114,7 @@ namespace FD.AI.Tree.Program
 
                 }
 
-                if (item.type == Node.FAED_TreeNodeType.Sequence)
+                if (item.type == Nodes.FAED_TreeNodeType.Sequence)
                 {
 
                     FAED_Sequence obj = scriptList.Find(x => x.GUID == item.GUID).obj.GetComponent<FAED_Sequence>();
@@ -137,7 +137,7 @@ namespace FD.AI.Tree.Program
 
                 }
 
-                if (item.type == Node.FAED_TreeNodeType.If)
+                if (item.type == Nodes.FAED_TreeNodeType.If)
                 {
 
                     FAED_TreeBoolNode obj = scriptList.Find(x => x.GUID == item.GUID).obj.GetComponent<FAED_TreeBoolNode>();
@@ -194,8 +194,8 @@ namespace FD.AI.Tree.Program
             if (data.links.Find(x => x.baseGUID == guid) != null)
             {
 
-                if (data.nodes.Find(x => x.GUID == guid).type == Node.FAED_TreeNodeType.Sequence) return;
-                if (data.nodes.Find(x => x.GUID == guid).type == Node.FAED_TreeNodeType.If) return;
+                if (data.nodes.Find(x => x.GUID == guid).type == Nodes.FAED_TreeNodeType.Sequence) return;
+                if (data.nodes.Find(x => x.GUID == guid).type == Nodes.FAED_TreeNodeType.If) return;
 
                 FindAllNode(root, data.links.Find(x => x.baseGUID == guid).targetGUID);
 
@@ -214,8 +214,8 @@ namespace FD.AI.Tree.Program
             if (data.links.Find(x => x.baseGUID == guid) != null)
             {
 
-                if (data.nodes.Find(x => x.GUID == guid).type == Node.FAED_TreeNodeType.Sequence) return;
-                if (data.nodes.Find(x => x.GUID == guid).type == Node.FAED_TreeNodeType.If) return;
+                if (data.nodes.Find(x => x.GUID == guid).type == Nodes.FAED_TreeNodeType.Sequence) return;
+                if (data.nodes.Find(x => x.GUID == guid).type == Nodes.FAED_TreeNodeType.If) return;
 
                 FindAllNode(root, data.links.Find(x => x.baseGUID == guid).targetGUID, ref list);
 

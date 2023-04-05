@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace FD.AI.Node
+namespace FD.AI.Nodes
 {
 
     [System.Serializable]

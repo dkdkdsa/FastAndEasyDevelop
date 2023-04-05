@@ -6,7 +6,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using FD.AI.Tree.Node;
+using FD.AI.Tree.Nodes;
 
 namespace FD.UI
 {

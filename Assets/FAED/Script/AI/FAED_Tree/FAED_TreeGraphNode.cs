@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-namespace FD.AI.Tree.Node
+namespace FD.AI.Tree.Nodes
 {
 
     public class FAED_TreeGraphNode : UnityEditor.Experimental.GraphView.Node

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FD.AI.Tree.Node;
+using FD.AI.Tree.Nodes;
 
 namespace FD.AI.Tree
 {
