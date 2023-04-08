@@ -20,7 +20,7 @@ namespace FD.System.SO
 
         }
 
-        public List<FAED_PoolList> lists = new List<FAED_PoolList>();
+        public List<FAED_PoolList> poolList = new List<FAED_PoolList>();
 
     }
 
