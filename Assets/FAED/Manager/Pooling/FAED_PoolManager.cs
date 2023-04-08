@@ -28,7 +28,34 @@ namespace FD.System.Manager
         public GameObject Pop(string poolName, Vector3 pos, Quaternion rot, Transform parent = null)
         {
 
+            if (!container.ContainsKey(poolName))
+            {
+
+                Debug.LogError($"Pool named {poolName} does not exist");
+                return null;
+
+            }
+
             return container[poolName].Pop(pos, rot, parent);
+
+        }
+
+        public void Push(GameObject obj)
+        {
+
+            if(container.ContainsKey(obj.name)) 
+            {
+
+                container[obj.name].Push(obj);
+
+            }
+            else
+            {
+
+                Debug.LogError($"Pool named {obj.name} does not exist");
+                Object.Destroy(obj);
+
+            }
 
         }
 
