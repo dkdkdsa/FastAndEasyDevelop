@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FD.System.Class
+namespace FD.System.Struct
 {
     public struct FAED_Pool
     {
@@ -37,7 +37,7 @@ namespace FD.System.Class
 
         }
 
-        public GameObject Out(Vector3 pos, Quaternion rot, Transform parent = null)
+        public GameObject Pop(Vector3 pos, Quaternion rot, Transform parent = null)
         {
 
             GameObject go;
@@ -65,7 +65,7 @@ namespace FD.System.Class
 
         }
 
-        public void In(GameObject obj)
+        public void Push(GameObject obj)
         {
 
             obj.SetActive(false);
