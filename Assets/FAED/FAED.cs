@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FD.System.Core;
+using System;
 
 namespace FD.Dev
 {
@@ -73,8 +74,24 @@ namespace FD.Dev
         }
 
         #endregion
-        
 
+        #region Delay
+
+        public static void DelayInvoke(Action action, float delayTime)
+        {
+
+            FAED_Core.Delay.InvokeDelay(action, delayTime);
+
+        }
+
+        public static void DelayInvokeRealTime(Action action, float delayTime)
+        {
+
+            FAED_Core.Delay.InvokeDelayReal(action, delayTime);
+
+        }
+
+        #endregion
 
     }
 

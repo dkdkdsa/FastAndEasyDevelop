@@ -17,7 +17,7 @@ namespace FD.System.Core
         private static FAED_DelayInvoke delay;
 
         public static FAED_PoolManager PoolManager { get { Init(); return poolManager; } }
-        private static FAED_DelayInvoke Delay { get { Init(); return delay; } }
+        public static FAED_DelayInvoke Delay { get { Init(); return delay; } }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
