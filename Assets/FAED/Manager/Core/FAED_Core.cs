@@ -1,3 +1,4 @@
+using FD.System.Delay;
 using FD.System.Manager;
 using FD.System.SO;
 using System.Collections;
@@ -13,8 +14,10 @@ namespace FD.System.Core
 
         private static FAED_PoolManager poolManager;
         private static FAED_Core instance;
+        private static FAED_DelayInvoke delay;
 
         public static FAED_PoolManager PoolManager { get { Init(); return poolManager; } }
+        private static FAED_DelayInvoke Delay { get { Init(); return delay; } }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
@@ -32,6 +35,13 @@ namespace FD.System.Core
                 {
 
                     poolManager = new FAED_PoolManager(so.poolList, go.transform);
+
+                }
+
+                if(delay == null)
+                {
+
+                    delay = go.AddComponent<FAED_DelayInvoke>();
 
                 }
 
