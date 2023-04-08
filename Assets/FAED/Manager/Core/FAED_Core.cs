@@ -10,13 +10,28 @@ namespace FD.System.Core
     {
 
         private static FAED_PoolManager poolManager;
+        private static FAED_Core instance;
 
-        public static FAED_PoolManager PoolManager { get { return poolManager; } }
+        public static FAED_PoolManager PoolManager { get { Init(); return poolManager; } }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
         {
 
+            if(instance == null)
+            {
 
+                GameObject go = new GameObject();
+                DontDestroyOnLoad(go);
+
+                if(poolManager == null)
+                {
+
+
+
+                }
+
+            }
 
         }
 
