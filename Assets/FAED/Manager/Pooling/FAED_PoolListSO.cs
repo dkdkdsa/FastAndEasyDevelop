@@ -1,18 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FAED_PoolListSO : MonoBehaviour
+namespace FD.System.SO
 {
-    // Start is called before the first frame update
-    void Start()
+
+    [CreateAssetMenu(fileName = "PoolList", menuName = "FAED/PoolList")]
+    public class FAED_PoolListSO : ScriptableObject
     {
-        
+
+        [Serializable]
+        public class FAED_PoolList
+        {
+
+            public string poolName;
+            public int poolCount;
+            public GameObject poolObj;
+
+        }
+
+        public List<FAED_PoolList> lists = new List<FAED_PoolList>();
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
