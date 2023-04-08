@@ -11,6 +11,13 @@ namespace FD.System.Manager
         
         private Dictionary<string, FAED_Pool> container = new Dictionary<string, FAED_Pool>();
 
+        public FAED_PoolManager() 
+        { 
+        
+            
+
+        }
+
     }
 
 }
