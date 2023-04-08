@@ -6,7 +6,6 @@ using UnityEngine;
 namespace FD.System.SO
 {
 
-    [CreateAssetMenu(fileName = "PoolList", menuName = "FAED/PoolList")]
     public class FAED_PoolListSO : ScriptableObject
     {
 

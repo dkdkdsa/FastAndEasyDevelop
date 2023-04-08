@@ -14,13 +14,18 @@ namespace FD.System.Manager
 
         public FAED_PoolManager(FAED_PoolListSO so, Transform parent) 
         { 
-        
-            foreach (var item in so.poolList)
+            
+            if (so != null)
             {
 
-                container.Add(item.poolName,
-                    new FAED_Pool(item.poolCount, item.poolObj, parent, item.poolName));
-            
+                foreach (var item in so.poolList)
+                {
+
+                    container.Add(item.poolName,
+                        new FAED_Pool(item.poolCount, item.poolObj, parent, item.poolName));
+
+                }
+
             }
 
         }
