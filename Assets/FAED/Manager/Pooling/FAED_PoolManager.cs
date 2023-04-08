@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FD.Dev
+namespace FD.System.Manager
 {
 
-    public static class FAED
+    public class FAED_PoolManager
     {
-            
         
+
 
     }
 
