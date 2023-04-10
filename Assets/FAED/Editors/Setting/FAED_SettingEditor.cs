@@ -10,6 +10,8 @@ using UnityEngine.UIElements;
 public class FAED_SettingEditor : EditorWindow
 {
 
+    private FAED_SettingSO so;
+
     [MenuItem("Test/Testing")]
     public static void CreateSettingWindow()
     {
@@ -24,6 +26,8 @@ public class FAED_SettingEditor : EditorWindow
     private void OnEnable()
     {
 
+        #region 이미지
+
         var image = new Image();
 
         Texture2D texture = Resources.Load<Texture2D>("FAED/Image/FAED_Logo");
@@ -31,8 +35,19 @@ public class FAED_SettingEditor : EditorWindow
         image.image = texture;
         image.style.flexShrink = 100;
         image.style.flexGrow = 0.3f;
-
         rootVisualElement.Add(image);
+
+        #endregion
+
+        Label label = new Label();
+        label.text = "FAED Setting";
+        rootVisualElement.Add(label);
+
+        #region 토글
+        Toggle toggle = new Toggle();
+        toggle.label = "Use pooling";
+        rootVisualElement.Add(toggle);
+        #endregion
 
     }
 
