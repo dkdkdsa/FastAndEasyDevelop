@@ -23,7 +23,7 @@ public class FAED_SettingEditor : EditorWindow
 
         var image = new Image();
         Texture2D texture = new Texture2D(0, 0);
-        texture.LoadImage(File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + "Image/FAED.png"));
+        texture.LoadImage(File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + "Image/FAED_Logo.png"));
 
         image.image = texture;
         image.sourceRect = new Rect(0, 0, 100, 100);
