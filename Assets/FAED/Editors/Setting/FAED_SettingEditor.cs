@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using FD.System.SO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ public class FAED_SettingEditor : EditorWindow
 
     private FAED_SettingSO so;
 
-    [MenuItem("Test/Testing")]
+    [MenuItem("FAED/Setting")]
     public static void CreateSettingWindow()
     {
 
@@ -25,6 +26,8 @@ public class FAED_SettingEditor : EditorWindow
 
     private void OnEnable()
     {
+
+        so = Resources.Load<FAED_SettingSO>("FAED/Setting/SettingData");
 
         #region ÀÌ¹ÌÁö
 
@@ -48,6 +51,25 @@ public class FAED_SettingEditor : EditorWindow
         toggle.label = "Use pooling";
         rootVisualElement.Add(toggle);
         #endregion
+
+        Button button = new Button(() =>
+        {
+
+            so.usePooling = toggle.value;
+
+            if (so.usePooling)
+            {
+
+                var ins = ScriptableObject.CreateInstance<FAED_PoolListSO>();
+                AssetDatabase.CreateAsset(ins, "Assets/Resources/FAED/Setting/PoolList.Asset");
+                so.poolList = Resources.Load<FAED_PoolListSO>("FAED/Setting/PoolList");
+
+            }
+
+        });
+        button.text = "SettingComplete";
+
+        rootVisualElement.Add(button);
 
     }
 

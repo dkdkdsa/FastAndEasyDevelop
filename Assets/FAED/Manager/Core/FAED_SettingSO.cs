@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FAED_SettingSO : ScriptableObject
 {
-    
+
     [HideInInspector] public FAED_PoolListSO poolList;
     [HideInInspector] public bool usePooling;
 
