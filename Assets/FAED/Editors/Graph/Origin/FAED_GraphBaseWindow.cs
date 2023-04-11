@@ -6,10 +6,17 @@ using UnityEngine;
 namespace FD.System.Editor.Graph
 {
 
-    public class FAED_GraphBaseWindow : EditorWindow
+    public class FAED_GraphBaseWindow<T> : EditorWindow where T : EditorWindow
     {
-        
 
+        public static T window;
+
+        public static void CreateGraphWindow()
+        {
+
+            window = (T)GetWindow(typeof(T));
+
+        }
 
     }
 
