@@ -73,8 +73,7 @@ public class FAED_SettingEditor : EditorWindow
 
         rootVisualElement.Add(button);
 
-        
-
+       
     }
 
 }
