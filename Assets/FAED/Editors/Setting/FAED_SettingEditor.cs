@@ -12,12 +12,13 @@ public class FAED_SettingEditor : EditorWindow
 {
 
     private FAED_SettingSO so;
+    private static FAED_SettingEditor window;
 
     [MenuItem("FAED/Setting")]
     public static void CreateSettingWindow()
     {
 
-        var window = GetWindow<FAED_SettingEditor>();
+        window = GetWindow<FAED_SettingEditor>();
         window.minSize = new Vector2(300, 500);
         window.maxSize = window.minSize;
         window.Show();
@@ -63,6 +64,7 @@ public class FAED_SettingEditor : EditorWindow
                 var ins = ScriptableObject.CreateInstance<FAED_PoolListSO>();
                 AssetDatabase.CreateAsset(ins, "Assets/Resources/FAED/Setting/PoolList.Asset");
                 so.poolList = Resources.Load<FAED_PoolListSO>("FAED/Setting/PoolList");
+                window.Close();
 
             }
 
@@ -70,6 +72,8 @@ public class FAED_SettingEditor : EditorWindow
         button.text = "SettingComplete";
 
         rootVisualElement.Add(button);
+
+        
 
     }
 
