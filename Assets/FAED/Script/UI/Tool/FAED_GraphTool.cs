@@ -97,7 +97,7 @@ namespace FD.UI.Tool
 
         }
 
-        protected virtual void RemovePort(UnityEditor.Experimental.GraphView.Node node, Port port, Direction direction)
+        protected virtual void RemovePort(Node node, Port port, Direction direction)
         {
 
             var targetEdge = graphView.edges.ToList().Where(x => x.output.portName == port.portName && x.output.node == port.node);
