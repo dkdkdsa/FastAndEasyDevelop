@@ -14,16 +14,16 @@ public class TestView : FAED_GraphBaseWindow<TestView>
         CreateGraphWindow();
         window.Show();
 
-        var node = new FAED_GraphNode();
 
-        window.Add(node);
 
     }
 
-    private void OnEnable()
+    private void OnGUI()
     {
 
-
+        var node = new FAED_GraphNode();
+        
+        window.Add(node);
 
     }
 

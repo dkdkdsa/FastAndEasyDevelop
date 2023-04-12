@@ -25,9 +25,14 @@ namespace FD.System.Editor.Graph
 
             style.backgroundColor = new StyleColor(new Color32(87, 87, 87, 255));
 
-            Button button = new Button();
-            button.text = "123";
-            Add(button);
+            RegisterCallback<DragUpdatedEvent>(evt =>
+            {
+
+                Debug.Log("123");
+                style.left = evt.localMousePosition.x;
+                style.top = evt.localMousePosition.y;
+
+            });
 
         }
 
