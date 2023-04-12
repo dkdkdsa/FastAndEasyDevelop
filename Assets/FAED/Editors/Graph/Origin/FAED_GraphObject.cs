@@ -12,6 +12,13 @@ namespace FD.System.Editor.Graph
 
         public Guid guid;
 
+        public void NewGUID()
+        {
+
+            guid = Guid.NewGuid();
+
+        }
+
     }
 
 
