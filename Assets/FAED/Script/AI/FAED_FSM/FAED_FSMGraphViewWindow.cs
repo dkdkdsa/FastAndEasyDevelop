@@ -42,11 +42,11 @@ namespace FD.AI.FSM
         {
 
             CreateWindowElement("FAED_FSM", true, true);
-            toolbar.AddTextField("FileName");
+            var filed = toolbar.AddTextField("FileName");
 
-            var saveBtn = toolbar.AddButton(() => { });
+            var saveBtn = toolbar.AddButton(() => { FAED_FSMSave.GetInstance(graphView, this).SaveGraph(filed.value); });
             saveBtn.text = "Save";
-            var loadBtn = toolbar.AddButton(() => { });
+            var loadBtn = toolbar.AddButton(() => { FAED_FSMSave.GetInstance(graphView, this).LoadGraph(filed.value); });
             loadBtn.text = "load";
 
             var rootNode = new FAED_FSMNode(Guid.NewGuid().ToString(), FAED_FSMNodeType.Root);
@@ -124,9 +124,11 @@ namespace FD.AI.FSM
             {
 
                 var node = new FAED_FSMNode(Guid.NewGuid().ToString(), FAED_FSMNodeType.Transition);
+                node.AddNameChangeEvent();
                 CreateNode(node, new Vector2(100, 100), "TransitionNode");
                 node.AddPort("State", Direction.Input, Port.Capacity.Single);
                 AddNode(node);
+                node.mainContainer.Q<TextField>().label = "GoTo";
 
             });
             trsBtn.text = "CreateTransitionNode";

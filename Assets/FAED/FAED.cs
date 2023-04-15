@@ -1,8 +1,6 @@
 using FD.Program.Core;
-using System.Security.Cryptography;
 using UnityEngine;
 using System;
-using UnityEngine.Experimental.GlobalIllumination;
 using System.Collections.Generic;
 
 namespace FD.Dev 

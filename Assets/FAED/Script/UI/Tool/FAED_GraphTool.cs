@@ -14,7 +14,7 @@ namespace FD.UI.Tool
     public class FAED_GraphViewTool<MainT> : FAED_GraphViewWindow<MainT> where MainT : FAED_GraphView, new()
     {
 
-        protected T CreateNode<T>(string titleText, Vector2 size, bool moveAble = true, bool deleteAble = true) where T : Node, new()
+        public T CreateNode<T>(string titleText, Vector2 size, bool moveAble = true, bool deleteAble = true) where T : Node, new()
         {
 
             T node = new T();
@@ -43,7 +43,7 @@ namespace FD.UI.Tool
 
         }
 
-        protected T CreateNode<T>(T nodeObject, Vector2 size, string titleText, bool moveAble = true, bool deleteAble = true) where T : Node
+        public T CreateNode<T>(T nodeObject, Vector2 size, string titleText, bool moveAble = true, bool deleteAble = true) where T : Node
         {
 
             nodeObject.title = titleText;
@@ -69,8 +69,8 @@ namespace FD.UI.Tool
             return nodeObject;
 
         }
-        
-        protected T AddToolBarElement<T>(T child) where T : VisualElement
+
+        public T AddToolBarElement<T>(T child) where T : VisualElement
         {
 
             toolbar.Add(child);
@@ -88,7 +88,7 @@ namespace FD.UI.Tool
 
         }
 
-        protected Node AddNode(Node node)
+        public Node AddNode(Node node)
         {
 
             graphView.AddNode(node);
@@ -97,7 +97,7 @@ namespace FD.UI.Tool
 
         }
 
-        protected virtual void RemovePort(Node node, Port port, Direction direction)
+        public virtual void RemovePort(Node node, Port port, Direction direction)
         {
 
             var targetEdge = graphView.edges.ToList().Where(x => x.output.portName == port.portName && x.output.node == port.node);
