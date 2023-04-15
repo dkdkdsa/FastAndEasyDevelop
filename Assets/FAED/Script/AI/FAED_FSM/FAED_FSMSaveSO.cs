@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace FD.AI.FSM
 {
 
-    public enum FAED_FSMNodeType
+    public class FAED_FSMSaveSO : ScriptableObject
     {
 
-        Root,
-        State,
-        Transition
+        //[HideInInspector] public List<FAED_FSMNode> 
 
     }
 

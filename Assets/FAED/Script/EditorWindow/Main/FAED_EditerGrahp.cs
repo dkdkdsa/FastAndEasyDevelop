@@ -144,7 +144,7 @@ namespace FD.Program.UI
         private Dictionary<FAED_AIGrahpViewNodeModlue, List<string>> keyPort = new Dictionary<FAED_AIGrahpViewNodeModlue, List<string>>();
         public static Dictionary<string, int> portNums = new Dictionary<string, int>();
 
-        public readonly Vector2 defultNodeSize = new Vector2(x: 150, y: 200);        
+        public readonly Vector2 defultNodeSize = new Vector2(x: 150, y: 200);                
 
         public FAED_AIGrahpViewModlue()
         {
