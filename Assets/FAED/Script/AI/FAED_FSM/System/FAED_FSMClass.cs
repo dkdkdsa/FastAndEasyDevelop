@@ -5,6 +5,7 @@ using UnityEngine;
 namespace FD.AI.FSM
 {
 
+    [System.Serializable]
     public class FAED_FSMClass
     {
 

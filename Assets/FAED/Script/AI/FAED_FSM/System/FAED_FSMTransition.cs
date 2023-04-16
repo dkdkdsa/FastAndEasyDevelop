@@ -8,12 +8,12 @@ namespace FD.AI.FSM
     public abstract class FAED_FSMTransition : MonoBehaviour
     {
 
-        [HideInInspector] public string nextState;
+        public string nextState;
 
-        public void SettingTransition(string nextState)
+        private void Awake()
         {
-
-            this.nextState = nextState;
+            
+            nextState = gameObject.name.Replace("(GoTo)", "");
 
         }
 

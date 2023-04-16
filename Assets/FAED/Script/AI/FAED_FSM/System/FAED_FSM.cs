@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace FD.AI.FSM
@@ -9,7 +10,7 @@ namespace FD.AI.FSM
     public class FAED_FSM : MonoBehaviour
     {
 
-        [SerializeField, HideInInspector] private List<FAED_FSMClass> fsmList = new List<FAED_FSMClass>();
+        [SerializeField] private List<FAED_FSMClass> fsmList = new List<FAED_FSMClass>();
         [SerializeField] private FAED_FSMSaveSO data;
         [SerializeField] private FAED_FSMState firstState; 
 
@@ -30,7 +31,18 @@ namespace FD.AI.FSM
 
             }
 
+            EnterEvnet += firstState.EnterState;
+            UpdateEvnet += firstState.UpdateState;
+            ExitEvnet += firstState.ExitState;
+            
+            transitions = firstState.GetComponentsInChildren<FAED_FSMTransition>().ToList();
 
+        }
+
+        private void Start()
+        {
+
+            EnterEvnet?.Invoke();
 
         }
 
@@ -54,7 +66,7 @@ namespace FD.AI.FSM
                 {
 
                     var text = data.nodeData.Find(y => y.guid == x.targetGuid).text;
-                    var trsOb = new GameObject("GoTo" + text);
+                    var trsOb = new GameObject("(GoTo)" + text);
                     trsOb.transform.SetParent(obj.transform);
                     trsObj.Add(trsOb);
 
@@ -68,6 +80,8 @@ namespace FD.AI.FSM
                     states = trsObj
 
                 });
+
+                obj.transform.SetParent(transform);
 
             }
 
@@ -92,7 +106,10 @@ namespace FD.AI.FSM
 
                     ExitEvnet?.Invoke();
                     ExitEvnet = null;
+                    UpdateEvnet = null;
+                    EnterEvnet = null;
                     ChangeState(trs.nextState);
+                    break;
 
                 }
 
@@ -111,7 +128,7 @@ namespace FD.AI.FSM
             UpdateEvnet += state.UpdateState;
             ExitEvnet += state.ExitState;
 
-            transitions = null;
+            transitions = new List<FAED_FSMTransition>();
 
             foreach(var trs in next.states)
             {

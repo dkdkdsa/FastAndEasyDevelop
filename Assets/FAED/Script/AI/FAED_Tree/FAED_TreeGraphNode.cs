@@ -1,7 +1,7 @@
-#if UNITY_EDITOR
 namespace FD.AI.Tree.Nodes
 {
 
+#if UNITY_EDITOR
     public class FAED_TreeGraphNode : UnityEditor.Experimental.GraphView.Node
     {
 
