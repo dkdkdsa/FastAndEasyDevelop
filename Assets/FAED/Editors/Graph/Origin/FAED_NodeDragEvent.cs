@@ -6,9 +6,7 @@ using UnityEngine.UIElements;
 public class FAED_NodeDragEvent : PointerManipulator
 {
     private Vector2 targetStartPosition { get; set; }
-
     private Vector3 pointerStartPosition { get; set; }
-
     private bool enabled { get; set; }
 
     public FAED_NodeDragEvent(VisualElement target)
