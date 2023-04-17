@@ -23,7 +23,7 @@ public class TestView : FAED_GraphBaseWindow<TestView>
         var node = new FAED_GraphNode();
         
         window.Add(node);
-        var d = new FAED_DragAndDropManipulator(node);
+        var d = new FAED_NodeDragEvent(node);
 
     }
 

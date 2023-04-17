@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class FAED_DragAndDropManipulator : PointerManipulator
+public class FAED_NodeDragEvent : PointerManipulator
 {
     private Vector2 targetStartPosition { get; set; }
 
@@ -11,7 +11,7 @@ public class FAED_DragAndDropManipulator : PointerManipulator
 
     private bool enabled { get; set; }
 
-    public FAED_DragAndDropManipulator(VisualElement target)
+    public FAED_NodeDragEvent(VisualElement target)
     {
 
         this.target = target;
