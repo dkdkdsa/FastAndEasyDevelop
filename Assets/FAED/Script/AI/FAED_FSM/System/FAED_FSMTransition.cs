@@ -8,7 +8,7 @@ namespace FD.AI.FSM
     public abstract class FAED_FSMTransition : MonoBehaviour
     {
 
-        public string nextState;
+        [HideInInspector] public string nextState;
 
         private void Awake()
         {
