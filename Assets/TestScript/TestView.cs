@@ -13,17 +13,17 @@ public class TestView : FAED_GraphBaseWindow<TestView>
 
         CreateGraphWindow();
         window.Show();
-
-
-
+        Set();
+        
     }
 
-    private void OnGUI()
+    private static void Set()
     {
 
         var node = new FAED_GraphNode();
         
         window.Add(node);
+        var d = new FAED_DragAndDropManipulator(node);
 
     }
 
