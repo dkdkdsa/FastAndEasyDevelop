@@ -1,3 +1,4 @@
+using FD.System.Core;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,11 +43,12 @@ namespace FD.System.Struct
 
             GameObject go;
 
-            if (poolContainer.Count < 0)
+            if (poolContainer.Count <= 0)
             {
 
                 go = Object.Instantiate(poolObj);
                 go.gameObject.name = poolName;
+                go.transform.SetParent(FAED_Core.scene.transform);
                 go.transform.SetParent(parent);
                 go.transform.SetPositionAndRotation(pos, rot);
                 Debug.LogWarning($" FAED_PoolManager : " +
@@ -58,6 +60,7 @@ namespace FD.System.Struct
 
             go = poolContainer.Dequeue();
             go.SetActive(true);
+            go.transform.SetParent(FAED_Core.scene.transform);
             go.transform.SetParent(parent);
             go.transform.SetPositionAndRotation(pos, rot);
             return go;

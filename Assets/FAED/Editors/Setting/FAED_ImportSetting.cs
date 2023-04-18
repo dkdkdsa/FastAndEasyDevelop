@@ -22,17 +22,16 @@ namespace FD.System.Import
 
                 Directory.CreateDirectory(Application.dataPath + "/Resources/FAED/Setting");
 
+                if (Resources.Load("FAED/Setting/SettingData") == null)
+                {
+
+                    var ins = ScriptableObject.CreateInstance<FAED_SettingSO>();
+                    AssetDatabase.CreateAsset(ins, "Assets/Resources/FAED/Setting/SettingData.Asset");
+                    FAED_SettingEditor.CreateSettingWindow();
+
+                }
+
             }
-
-            if (Resources.Load("FAED/Setting/SettingData") == null)
-            {
-
-                var ins = ScriptableObject.CreateInstance<FAED_SettingSO>();
-                AssetDatabase.CreateAsset(ins, "Assets/Resources/FAED/Setting/SettingData.Asset");
-                FAED_SettingEditor.CreateSettingWindow();
-                
-            }
-
 
         }
 

@@ -12,12 +12,14 @@ namespace FD.System.Core
     public class FAED_Core : MonoBehaviour
     {
 
-        private static FAED_PoolManager poolManager;
-        private static FAED_Core instance;
-        private static FAED_DelayInvoke delay;
+        private static FAED_PoolManager poolManager = null;
+        private static FAED_Core instance = null;
+        private static FAED_DelayInvoke delay = null;
 
         public static FAED_PoolManager PoolManager { get { Init(); return poolManager; } }
         public static FAED_DelayInvoke Delay { get { Init(); return delay; } }
+
+        public static Transform scene;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
@@ -26,10 +28,10 @@ namespace FD.System.Core
             if(instance == null)
             {
 
-                GameObject go = new GameObject();
+                GameObject go = new GameObject("*@FAED_MANAGER@*");
                 instance = go.AddComponent<FAED_Core>();
                 DontDestroyOnLoad(go);
-                var so = Resources.Load<FAED_SettingSO>("FAED/Setting/FAEDSetting");
+                var so = Resources.Load<FAED_SettingSO>("FAED/Setting/SettingData");
 
                 if (poolManager == null && so.usePooling == true)
                 {
@@ -44,6 +46,13 @@ namespace FD.System.Core
                     delay = go.AddComponent<FAED_DelayInvoke>();
 
                 }
+
+            }
+
+            if (GameObject.Find("*@FAED_Scene@*") == null)
+            {
+
+                scene = new GameObject() { name = "*@FAED_Scene@*" }.transform;
 
             }
 

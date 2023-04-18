@@ -51,6 +51,7 @@ public class FAED_SettingEditor : EditorWindow
         Toggle toggle = new Toggle();
         toggle.label = "Use pooling";
         rootVisualElement.Add(toggle);
+        toggle.value = so.usePooling;
         #endregion
 
         Button button = new Button(() =>
@@ -61,10 +62,16 @@ public class FAED_SettingEditor : EditorWindow
             if (so.usePooling)
             {
 
-                var ins = ScriptableObject.CreateInstance<FAED_PoolListSO>();
-                AssetDatabase.CreateAsset(ins, "Assets/Resources/FAED/Setting/PoolList.Asset");
-                so.poolList = Resources.Load<FAED_PoolListSO>("FAED/Setting/PoolList");
+                if(Resources.Load<FAED_PoolListSO>("FAED/Setting/PoolList") == null)
+                {
+
+                    var ins = ScriptableObject.CreateInstance<FAED_PoolListSO>();
+                    AssetDatabase.CreateAsset(ins, "Assets/Resources/FAED/Setting/PoolList.Asset");
+
+                }
+
                 window.Close();
+                so.poolList = Resources.Load<FAED_PoolListSO>("FAED/Setting/PoolList");
 
             }
 

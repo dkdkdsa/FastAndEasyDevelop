@@ -59,7 +59,6 @@ namespace FD.Dev
         {
 
             GameObject go = FAED_Core.PoolManager.Pop(poolName, pos, rot, parent);
-
             component = go.GetComponent<T>();
 
             return go;

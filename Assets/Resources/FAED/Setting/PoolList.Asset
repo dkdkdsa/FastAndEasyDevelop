@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1e9c26dca4f6c8408b970fa681cf085, type: 3}
   m_Name: PoolList
   m_EditorClassIdentifier: 
-  poolList: []
+  poolList:
+  - poolName: Test
+    poolCount: 10
+    poolObj: {fileID: 5711545351137068805, guid: 738e190c0d391a8419e9e155ce05a44d, type: 3}
