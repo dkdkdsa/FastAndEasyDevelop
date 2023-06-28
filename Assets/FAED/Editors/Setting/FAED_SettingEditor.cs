@@ -51,7 +51,14 @@ public class FAED_SettingEditor : EditorWindow
         Toggle toggle = new Toggle();
         toggle.label = "Use pooling";
         rootVisualElement.Add(toggle);
-        toggle.value = so.usePooling;
+
+        if(so!=null) 
+        {
+
+            toggle.value = so.usePooling;
+
+        }
+
         #endregion
 
         Button button = new Button(() =>

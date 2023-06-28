@@ -27,8 +27,7 @@ namespace FD.System.Import
 
                     var ins = ScriptableObject.CreateInstance<FAED_SettingSO>();
                     AssetDatabase.CreateAsset(ins, "Assets/Resources/FAED/Setting/SettingData.Asset");
-                    FAED_SettingEditor.CreateSettingWindow();
-
+                    
                 }
 
             }
