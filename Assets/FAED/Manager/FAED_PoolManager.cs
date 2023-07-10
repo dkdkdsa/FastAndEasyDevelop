@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using UnityEngine;
 
 namespace FD.Core
@@ -12,6 +14,25 @@ namespace FD.Core
         private Dictionary<string, Queue<GameObject>> scenePoolingContainer = new Dictionary<string, Queue<GameObject>>();
         private FAED_PoolingSO poolingSO;
         private Transform parent;
+
+        private Queue<GameObject> CreatePoolingQueue(int poolCt, string key, GameObject poolObj, Transform parent)
+        {
+
+            Queue<GameObject> objQ = new Queue<GameObject>();
+
+            for (int j = 0; j < poolCt; j++)
+            {
+
+                var obj = UnityEngine.Object.Instantiate(poolObj, parent);
+                obj.gameObject.name = key;
+                obj.SetActive(false);
+                objQ.Enqueue(obj);
+
+            }
+
+            return objQ;
+
+        }
 
         public FAED_PoolManager(FAED_PoolingSO poolingSO, Transform parent) 
         { 
@@ -41,7 +62,6 @@ namespace FD.Core
             }
 
         }
-
         public void CreateScenePool(string sceneName)
         {
 
@@ -57,7 +77,7 @@ namespace FD.Core
                 foreach (var obj in item.Value)
                 {
 
-                    Object.Destroy(obj);
+                    UnityEngine.Object.Destroy(obj);
 
                 }
 
@@ -85,24 +105,76 @@ namespace FD.Core
             }
 
         }
-
-
-        private Queue<GameObject> CreatePoolingQueue(int poolCt, string key, GameObject poolObj, Transform parent)
+        public void InsertPool(GameObject obj)
         {
 
-            Queue<GameObject> objQ = new Queue<GameObject>();
-
-            for (int j = 0; j < poolCt; j++)
+            if(alwaysPoolingContainer.ContainsKey(obj.name)) 
             {
 
-                var obj = Object.Instantiate(poolObj, parent);
-                obj.gameObject.name = key;
+                alwaysPoolingContainer[obj.name].Enqueue(obj);
+                obj.transform.SetParent(parent);
                 obj.SetActive(false);
-                objQ.Enqueue(obj);
+
+            }
+            else if (scenePoolingContainer.ContainsKey(obj.name))
+            {
+
+                scenePoolingContainer[obj.name].Enqueue(obj);
+                obj.transform.SetParent(parent);
+                obj.SetActive(false);
+
+            }
+            else
+            {
+
+                Debug.LogWarning($"Pool named {obj.name} does not exist");
+                UnityEngine.Object.Destroy(obj);
 
             }
 
-            return objQ;
+        }
+        public GameObject TakeOutPool(string key, Nullable<Vector3> pos = null, Nullable<Quaternion> rot = null, Transform parent = null)
+        {
+
+            if (pos == null) pos = new Vector3(0, 0, 0);
+            if (rot == null) rot = Quaternion.identity;
+
+            if (alwaysPoolingContainer.ContainsKey(key)) 
+            {
+
+                var obj = alwaysPoolingContainer[key].Dequeue();
+                obj.SetActive(true);
+                obj.transform.SetParent(parent);
+                obj.transform.position = (Vector3)pos;
+                obj.transform.rotation = (Quaternion)rot;
+
+                return obj;
+
+            }
+            else if (scenePoolingContainer.ContainsKey(key))
+            {
+
+                var obj = alwaysPoolingContainer[key].Dequeue();
+                obj.SetActive(true);
+                obj.transform.SetParent(parent);
+                obj.transform.position = (Vector3)pos;
+                obj.transform.rotation = (Quaternion)rot;
+
+                return obj;
+
+            }
+            else
+            {
+
+                Debug.LogError($"Pool named {key} does not exist");
+                return null;
+            }
+
+        }
+        public T TakeOutPool<T>(string key, Nullable<Vector3> pos = null, Nullable<Quaternion> rot = null, Transform parent = null)
+        {
+
+            return TakeOutPool(key, pos, rot, parent).GetComponent<T>();
 
         }
 
