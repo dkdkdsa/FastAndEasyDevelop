@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FD.Core;
+using System;
 
 namespace FD.Dev
 {
@@ -9,13 +10,14 @@ namespace FD.Dev
     public static class FAED
     {
 
+        #region Pooling
+
         public static void InsertPool(GameObject obj)
         {
 
             FAED_Core.PoolManager.InsertPool(obj);
 
         }
-
         public static GameObject TakePool(string poolName)
         {
 
@@ -64,6 +66,27 @@ namespace FD.Dev
             return FAED_Core.PoolManager.TakePool<T>(poolName, pos, rot, parent);
 
         }
+
+        #endregion
+
+        #region DelayInvoke
+
+        public static void InvokeDelay(Action action, float delay) 
+        {
+            
+            FAED_Core.DelayInvoke.InvokeDelay(action, delay);
+
+        }
+
+        public static void InvokeDelayRealTime(Action action, float delay)
+        {
+
+            FAED_Core.DelayInvoke.InvokeDelayRealTime(action, delay);
+
+        }
+
+
+        #endregion
 
     }
 

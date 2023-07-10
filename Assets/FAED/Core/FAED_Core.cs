@@ -11,6 +11,7 @@ namespace FD.Core
 
         private static FAED_PoolManager poolManager;
         private static FAED_Core instance;
+        private static FAED_DelayInvoke delayInvoke;
 
         public static FAED_PoolManager PoolManager 
         {
@@ -34,6 +35,16 @@ namespace FD.Core
 
             }
         }
+        public static FAED_DelayInvoke DelayInvoke 
+        {
+
+            get
+            {
+                Init();
+                return delayInvoke;
+            }
+
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
@@ -46,6 +57,7 @@ namespace FD.Core
                 DontDestroyOnLoad(go);
 
                 instance = go.AddComponent<FAED_Core>();
+                delayInvoke = go.AddComponent<FAED_DelayInvoke>();
 
                 var res = Resources.Load<FAED_SettingSO>("FAED/SettingSO");
 
