@@ -8,7 +8,9 @@ namespace FD.Core
     public class FAED_SettingSO : ScriptableObject
     {
 
-        public bool usePooling;
+        [HideInInspector] public bool usePooling;
+
+        public FAED_PoolingSO poolingSO;
 
     }
 
