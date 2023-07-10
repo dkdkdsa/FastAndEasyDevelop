@@ -15,25 +15,6 @@ namespace FD.Core
         private FAED_PoolingSO poolingSO;
         private Transform parent;
 
-        private Queue<GameObject> CreatePoolingQueue(int poolCt, string key, GameObject poolObj, Transform parent)
-        {
-
-            Queue<GameObject> objQ = new Queue<GameObject>();
-
-            for (int j = 0; j < poolCt; j++)
-            {
-
-                var obj = UnityEngine.Object.Instantiate(poolObj, parent);
-                obj.gameObject.name = key;
-                obj.SetActive(false);
-                objQ.Enqueue(obj);
-
-            }
-
-            return objQ;
-
-        }
-
         public FAED_PoolManager(FAED_PoolingSO poolingSO, Transform parent) 
         { 
             
@@ -62,6 +43,26 @@ namespace FD.Core
             }
 
         }
+
+        private Queue<GameObject> CreatePoolingQueue(int poolCt, string key, GameObject poolObj, Transform parent)
+        {
+
+            Queue<GameObject> objQ = new Queue<GameObject>();
+
+            for (int j = 0; j < poolCt; j++)
+            {
+
+                var obj = UnityEngine.Object.Instantiate(poolObj, parent);
+                obj.gameObject.name = key;
+                obj.SetActive(false);
+                objQ.Enqueue(obj);
+
+            }
+
+            return objQ;
+
+        }
+
         public void CreateScenePool(string sceneName)
         {
 
@@ -133,7 +134,7 @@ namespace FD.Core
             }
 
         }
-        public GameObject TakeOutPool(string key, Nullable<Vector3> pos = null, Nullable<Quaternion> rot = null, Transform parent = null)
+        public GameObject TakePool(string key, Nullable<Vector3> pos = null, Nullable<Quaternion> rot = null, Transform parent = null)
         {
 
             if (pos == null) pos = new Vector3(0, 0, 0);
@@ -171,10 +172,10 @@ namespace FD.Core
             }
 
         }
-        public T TakeOutPool<T>(string key, Nullable<Vector3> pos = null, Nullable<Quaternion> rot = null, Transform parent = null)
+        public T TakePool<T>(string key, Nullable<Vector3> pos = null, Nullable<Quaternion> rot = null, Transform parent = null)
         {
 
-            return TakeOutPool(key, pos, rot, parent).GetComponent<T>();
+            return TakePool(key, pos, rot, parent).GetComponent<T>();
 
         }
 
