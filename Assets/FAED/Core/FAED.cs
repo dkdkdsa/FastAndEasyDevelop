@@ -77,14 +77,12 @@ namespace FD.Dev
             FAED_Core.DelayInvoke.InvokeDelay(action, delay);
 
         }
-
         public static void InvokeDelayRealTime(Action action, float delay)
         {
 
             FAED_Core.DelayInvoke.InvokeDelayRealTime(action, delay);
 
         }
-
 
         #endregion
 
