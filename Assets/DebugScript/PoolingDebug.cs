@@ -13,7 +13,7 @@ public class PoolingDebug : MonoBehaviour
         {
 
             var obj = FAED.TakePool("A");
-            FAED.InsertPool(obj);
+            //FAED.InsertPool(obj);
 
         }
 
