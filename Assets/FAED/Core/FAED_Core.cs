@@ -34,7 +34,7 @@ namespace FD.Core
             }
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
         {          
 
@@ -58,6 +58,16 @@ namespace FD.Core
             }
 
 
+
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void CreateScenePool() 
+        { 
+            
+
+
+            poolManager.CreateScenePool();
 
         }
 

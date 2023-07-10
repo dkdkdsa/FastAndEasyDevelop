@@ -8,11 +8,16 @@ namespace FD.Core
     public class FAED_PoolManager
     {
 
-        private Dictionary<string, Queue<GameObject>> poolingContainer = new Dictionary<string, Queue<GameObject>>();
+        private Dictionary<string, Queue<GameObject>> alwaysPoolingContainer = new Dictionary<string, Queue<GameObject>>();
+        private Dictionary<string, Queue<GameObject>> scenePoolingContainer = new Dictionary<string, Queue<GameObject>>();
+        private FAED_PoolingSO poolingSO;
+        private string beforeSceneName = "";
 
         public FAED_PoolManager(FAED_PoolingSO poolingSO, Transform parent) 
         { 
             
+            this.poolingSO = poolingSO;
+
             for(int i = 0; i < poolingSO.alwaysPoolingObjects.Count; i++) 
             { 
                 
@@ -39,6 +44,19 @@ namespace FD.Core
                 }
 
                 poolingContainer.Add(key, objQ);
+
+            }
+
+        }
+
+        public void CreateScenePool(string sceneName)
+        {
+
+            if(beforeSceneName == "")
+            {
+
+                beforeSceneName = sceneName;
+                
 
             }
 
