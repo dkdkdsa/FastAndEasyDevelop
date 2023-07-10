@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace FD.Core.Editors
 {
@@ -18,6 +19,13 @@ namespace FD.Core.Editors
             window.maxSize = new Vector2(300, 500);
             window.minSize = new Vector2(300, 500);
             window.Show();
+
+        }
+
+        private void SettingWindow()
+        {
+
+
 
         }
 
