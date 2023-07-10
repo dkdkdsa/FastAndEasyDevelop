@@ -17,17 +17,9 @@ namespace FD.Core.Editors
             window.titleContent.text = "FAED_Setting";
             window.maxSize = new Vector2(300, 500);
             window.minSize = new Vector2(300, 500);
-            window.Show();       
+            window.Show();
 
         }
-
-        private void OnEnable()
-        {
-
-        
-
-        }
-
 
     }
 
