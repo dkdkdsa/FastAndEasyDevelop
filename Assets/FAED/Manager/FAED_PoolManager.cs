@@ -10,10 +10,11 @@ namespace FD.Core
     public class FAED_PoolManager
     {
 
-        private Dictionary<string, Queue<GameObject>> alwaysPoolingContainer = new Dictionary<string, Queue<GameObject>>();
-        private Dictionary<string, Queue<GameObject>> scenePoolingContainer = new Dictionary<string, Queue<GameObject>>();
+        private Dictionary<string, FAED_PoolObj> alwaysPoolingContainer = new Dictionary<string, FAED_PoolObj>();
+        private Dictionary<string, FAED_PoolObj> scenePoolingContainer = new Dictionary<string, FAED_PoolObj>();
         private FAED_PoolingSO poolingSO;
         private Transform parent;
+        private Transform sceneParent;
 
         public FAED_PoolManager(FAED_PoolingSO poolingSO, Transform parent) 
         { 
@@ -38,7 +39,7 @@ namespace FD.Core
 
                 }
 
-                alwaysPoolingContainer.Add(key, objQ);
+                alwaysPoolingContainer.Add(key, new FAED_PoolObj(poolingLS.poolingObject, objQ));
 
             }
 
@@ -75,7 +76,7 @@ namespace FD.Core
             foreach (var item in scenePoolingContainer)
             {
 
-                foreach (var obj in item.Value)
+                foreach (var obj in item.Value.objectQuque)
                 {
 
                     UnityEngine.Object.Destroy(obj);
@@ -84,7 +85,7 @@ namespace FD.Core
 
             }
 
-            scenePoolingContainer = new Dictionary<string, Queue<GameObject>>();
+            scenePoolingContainer = new Dictionary<string, FAED_PoolObj>();
 
             foreach(var obj in pool.scenePoolingObjects)
             {
@@ -101,7 +102,7 @@ namespace FD.Core
 
                 }
 
-                scenePoolingContainer.Add(key, objQ);
+                scenePoolingContainer.Add(key, new FAED_PoolObj(obj.poolingObject, objQ));
 
             }
 
@@ -112,7 +113,7 @@ namespace FD.Core
             if(alwaysPoolingContainer.ContainsKey(obj.name)) 
             {
 
-                alwaysPoolingContainer[obj.name].Enqueue(obj);
+                alwaysPoolingContainer[obj.name].objectQuque.Enqueue(obj);
                 obj.transform.SetParent(parent);
                 obj.SetActive(false);
 
@@ -120,7 +121,7 @@ namespace FD.Core
             else if (scenePoolingContainer.ContainsKey(obj.name))
             {
 
-                scenePoolingContainer[obj.name].Enqueue(obj);
+                scenePoolingContainer[obj.name].objectQuque.Enqueue(obj);
                 obj.transform.SetParent(parent);
                 obj.SetActive(false);
 
@@ -134,6 +135,12 @@ namespace FD.Core
             }
 
         }
+        public void SetSceneParent(Transform parent) 
+        {
+
+            sceneParent = parent;
+
+        }
         public GameObject TakePool(string key, Nullable<Vector3> pos = null, Nullable<Quaternion> rot = null, Transform parent = null)
         {
 
@@ -143,8 +150,19 @@ namespace FD.Core
             if (alwaysPoolingContainer.ContainsKey(key)) 
             {
 
-                var obj = alwaysPoolingContainer[key].Dequeue();
+                if (alwaysPoolingContainer[key].objectQuque.Count <= 0)
+                {
+
+                    var ins = UnityEngine.Object.Instantiate(alwaysPoolingContainer[key].originObj, (Vector3)pos, (Quaternion)rot, parent);
+
+                    ins.name = key;
+                    return ins;
+
+                }
+
+                var obj = alwaysPoolingContainer[key].objectQuque.Dequeue();
                 obj.SetActive(true);
+                obj.transform.SetParent(sceneParent);
                 obj.transform.SetParent(parent);
                 obj.transform.position = (Vector3)pos;
                 obj.transform.rotation = (Quaternion)rot;
@@ -155,8 +173,21 @@ namespace FD.Core
             else if (scenePoolingContainer.ContainsKey(key))
             {
 
-                var obj = alwaysPoolingContainer[key].Dequeue();
+
+                if (scenePoolingContainer[key].objectQuque.Count <= 0)
+                {
+
+                    var ins = UnityEngine.Object.Instantiate(scenePoolingContainer[key].originObj, (Vector3)pos, (Quaternion)rot, parent);
+
+                    ins.name = key;
+                    return ins;
+
+                }
+
+
+                var obj = scenePoolingContainer[key].objectQuque.Dequeue();
                 obj.SetActive(true);
+                obj.transform.SetParent(sceneParent);
                 obj.transform.SetParent(parent);
                 obj.transform.position = (Vector3)pos;
                 obj.transform.rotation = (Quaternion)rot;

@@ -24,4 +24,17 @@ namespace FD.Core
 
     }
 
+    public class FAED_PoolObj
+    {
+
+        public GameObject originObj;
+        public Queue<GameObject> objectQuque;
+
+        public FAED_PoolObj(GameObject originObj, Queue<GameObject> objectQuque)
+        {
+            this.originObj = originObj;
+            this.objectQuque = objectQuque;
+        }
+    }
+
 }

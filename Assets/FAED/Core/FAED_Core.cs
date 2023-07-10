@@ -57,6 +57,8 @@ namespace FD.Core
 
                 }
 
+                SceneManager.sceneLoaded += CreateSceneObj;
+
             }
 
         }
@@ -65,6 +67,20 @@ namespace FD.Core
         { 
            
             poolManager.CreateScenePool(scene.name);
+
+        }
+
+        private static void CreateSceneObj(Scene scene, LoadSceneMode mode)
+        {
+
+            GameObject go = new GameObject("_@*FAED_SCENE*@_");
+
+            if(poolManager != null)
+            {
+
+                poolManager.SetSceneParent(go.transform);
+
+            }
 
         }
 
