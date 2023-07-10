@@ -5,7 +5,7 @@ using UnityEngine;
 namespace FD.Core
 {
 
-    public class FAED_Core
+    public class FAED_Core : MonoBehaviour
     {
 
         private static FAED_PoolManager poolManager;
@@ -40,10 +40,12 @@ namespace FD.Core
 
             if(instance == null) 
             {
-                
-                instance = new FAED_Core();
-
                 GameObject go = new GameObject("_@*FAED_CORE*@_");
+                DontDestroyOnLoad(go);
+
+                instance = go.AddComponent<FAED_Core>();
+
+
                 var res = Resources.Load<FAED_SettingSO>("FAED/SettingSO");
 
                 if (poolManager == null && res.usePooling)

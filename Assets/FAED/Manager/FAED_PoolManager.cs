@@ -24,6 +24,8 @@ namespace FD.Core
                 {
 
                     var obj = Object.Instantiate(poolingSO.alwaysPoolingObjects[i].poolingObject, parent);
+                    obj.gameObject.name = key;
+                    obj.SetActive(false);
                     objQ.Enqueue(obj);
 
                 }
