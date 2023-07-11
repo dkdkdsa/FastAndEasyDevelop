@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using MiniMap = UnityEditor.Experimental.GraphView.MiniMap;
+using UnityEditor;
 
 namespace FD.Core.Editors
 {
@@ -72,6 +73,23 @@ namespace FD.Core.Editors
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+
+        }
+        public void SetGrid()
+        {
+
+            SetGrid("DefaultGridBG");
+
+        }
+        public void SetGrid(string ussPath)
+        {
+
+            var style = Resources.Load<StyleSheet>(ussPath);
+            styleSheets.Add(style);
+
+            var grid = new GridBackground();
+            grid.StretchToParentSize();
+            Insert(0, grid);
 
         }
 
