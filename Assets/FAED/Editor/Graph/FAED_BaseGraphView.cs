@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine.UIElements;
+using MiniMap = UnityEditor.Experimental.GraphView.MiniMap;
 
 namespace FD.Core.Editors
 {
@@ -48,6 +50,28 @@ namespace FD.Core.Editors
             AddElement(node);
 
             return node;
+
+        }
+        public void SetMiniMap(Rect rect)
+        {
+
+            MiniMap miniMap = new MiniMap { anchored = true };
+            miniMap.SetPosition(rect);
+            Add(miniMap);
+
+        }
+        public void SetZoom()
+        {
+
+            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+
+        }
+        public void SetDrag()
+        {
+
+            this.AddManipulator(new ContentDragger());
+            this.AddManipulator(new SelectionDragger());
+            this.AddManipulator(new RectangleSelector());
 
         }
 
