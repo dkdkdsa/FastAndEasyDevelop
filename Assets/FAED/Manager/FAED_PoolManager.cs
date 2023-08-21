@@ -75,7 +75,7 @@ namespace FD.Core
             foreach (var item in scenePoolingContainer)
             {
 
-                foreach (var obj in item.Value.objectQuque)
+                foreach (var obj in item.Value.objectQueue)
                 {
 
                     UnityEngine.Object.Destroy(obj);
@@ -112,7 +112,7 @@ namespace FD.Core
             if(alwaysPoolingContainer.ContainsKey(obj.name)) 
             {
 
-                alwaysPoolingContainer[obj.name].objectQuque.Enqueue(obj);
+                alwaysPoolingContainer[obj.name].objectQueue.Enqueue(obj);
                 obj.transform.SetParent(parent);
                 obj.SetActive(false);
 
@@ -120,7 +120,7 @@ namespace FD.Core
             else if (scenePoolingContainer.ContainsKey(obj.name))
             {
 
-                scenePoolingContainer[obj.name].objectQuque.Enqueue(obj);
+                scenePoolingContainer[obj.name].objectQueue.Enqueue(obj);
                 obj.transform.SetParent(parent);
                 obj.SetActive(false);
 
@@ -149,7 +149,7 @@ namespace FD.Core
             if (alwaysPoolingContainer.ContainsKey(key)) 
             {
 
-                if (alwaysPoolingContainer[key].objectQuque.Count <= 0)
+                if (alwaysPoolingContainer[key].objectQueue.Count <= 0)
                 {
 
                     var ins = UnityEngine.Object.Instantiate(alwaysPoolingContainer[key].originObj, (Vector3)pos, (Quaternion)rot, parent);
@@ -159,7 +159,7 @@ namespace FD.Core
 
                 }
 
-                var obj = alwaysPoolingContainer[key].objectQuque.Dequeue();
+                var obj = alwaysPoolingContainer[key].objectQueue.Dequeue();
                 obj.SetActive(true);
                 obj.transform.SetParent(sceneParent);
                 obj.transform.SetParent(parent);
@@ -173,7 +173,7 @@ namespace FD.Core
             {
 
 
-                if (scenePoolingContainer[key].objectQuque.Count <= 0)
+                if (scenePoolingContainer[key].objectQueue.Count <= 0)
                 {
 
                     var ins = UnityEngine.Object.Instantiate(scenePoolingContainer[key].originObj, (Vector3)pos, (Quaternion)rot, parent);
@@ -184,7 +184,7 @@ namespace FD.Core
                 }
 
 
-                var obj = scenePoolingContainer[key].objectQuque.Dequeue();
+                var obj = scenePoolingContainer[key].objectQueue.Dequeue();
                 obj.SetActive(true);
                 obj.transform.SetParent(sceneParent);
                 obj.transform.SetParent(parent);

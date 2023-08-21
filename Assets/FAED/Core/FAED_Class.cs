@@ -28,13 +28,14 @@ namespace FD.Core
     {
 
         public GameObject originObj;
-        public Queue<GameObject> objectQuque;
+        public Queue<GameObject> objectQueue;
 
-        public FAED_PoolObj(GameObject originObj, Queue<GameObject> objectQuque)
+        public FAED_PoolObj(GameObject originObj, Queue<GameObject> objectQueue)
         {
             this.originObj = originObj;
-            this.objectQuque = objectQuque;
+            this.objectQueue = objectQueue;
         }
+
     }
 
 }
