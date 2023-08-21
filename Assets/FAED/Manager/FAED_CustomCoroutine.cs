@@ -17,7 +17,6 @@ public class FAED_CustomCoroutine : MonoBehaviour
 
             //언젠간 만들겠지
 
-
         }
 
     }
