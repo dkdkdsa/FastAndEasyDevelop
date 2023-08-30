@@ -66,14 +66,14 @@ namespace FD.Dev.CSG
     public class FAED_CSGObject
     {
 
-        private List<FAED_Vertex> vertices;
-        private List<int> indices;
+        private List<FAED_Vertex> vertices = new List<FAED_Vertex>();
+        private List<List<int>> indices = new List<List<int>>();
 
         public FAED_CSGObject()
         {
 
             vertices = new List<FAED_Vertex>();
-            indices = new List<int>();
+            indices = new List<List<int>>();
 
         }
 
@@ -85,10 +85,10 @@ namespace FD.Dev.CSG
             var mesh = go.GetComponent<MeshFilter>().mesh;
             var trm = go.transform;
 
-            int vertexCount = vertices.Count;
-
             Vector3[] v = mesh.vertices;
             Vector3[] n = mesh.normals;
+
+            int vertexCount = v.Length;
 
             for(int i = 0; i < vertexCount; i++)
             {
@@ -97,7 +97,16 @@ namespace FD.Dev.CSG
 
             }
 
-            indices = new List<int>(mesh.triangles);
+            for(int i = 0, c = mesh.subMeshCount; i < c; i++)
+            {
+
+                if(mesh.GetTopology(i) != MeshTopology.Triangles) continue;
+
+                var inc = new List<int>();
+                mesh.GetIndices(inc,i);
+                indices.Add(inc);
+
+            }
 
         }
 
@@ -105,7 +114,7 @@ namespace FD.Dev.CSG
         {
 
             vertices = new List<FAED_Vertex>();
-            indices = new List<int>();
+            indices = new List<List<int>>();
 
             int p = 0;
 
@@ -114,19 +123,23 @@ namespace FD.Dev.CSG
 
                 var poly = polygons[i];
 
-                for(int j = 0; j < poly.vertexs.Count; j++)
+                var induce = new List<int>();
+
+                for(int j = 2; j < poly.vertexs.Count; j++)
                 {
 
                     vertices.Add(poly.vertexs[0]);
-                    indices.Add(p++);
+                    induce.Add(p++);
 
                     vertices.Add(poly.vertexs[j - 1]);
-                    indices.Add(p++);
+                    induce.Add(p++);
 
                     vertices.Add(poly.vertexs[j]);
-                    indices.Add(p++);
+                    induce.Add(p++);
 
                 }
+
+                indices.Add(induce);
 
             }
 
@@ -137,19 +150,26 @@ namespace FD.Dev.CSG
 
             var ls = new List<FAED_Polygon>();
 
-            for(int i = 0; i < indices.Count; i += 3)
+            for (int s = 0, c = indices.Count; s < c; s++)
             {
 
-                var tri = new List<FAED_Vertex>()
+                var ins = indices[s];
+
+                for(int i = 0, ic = ins.Count; i < ic; i+=3)
                 {
 
-                    vertices[i],
-                    vertices[i + 1],
-                    vertices[i + 2],
+                    var tri = new List<FAED_Vertex>()
+                    {
 
-                };
+                        vertices[ins[i]],
+                        vertices[ins[i + 1]],
+                        vertices[ins[i + 2]],
 
-                ls.Add(new FAED_Polygon(tri));
+                    };
+
+                    ls.Add(new FAED_Polygon(tri));   
+
+                }
 
             }
 
@@ -177,7 +197,14 @@ namespace FD.Dev.CSG
             m.vertices = v;
             m.normals = n;
 
-            m.triangles = indices.ToArray();
+            m.subMeshCount = indices.Count;
+
+            for(int i = 0; i < m.subMeshCount; i++)
+            {
+
+                m.SetIndices(indices[i], MeshTopology.Triangles, i);
+
+            }
 
             return m;
         }

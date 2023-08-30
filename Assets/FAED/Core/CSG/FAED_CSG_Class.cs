@@ -86,12 +86,12 @@ namespace FD.Dev.CSG
                 types.Add(polyType);
 
             }
-
+            ///
             switch (polyType)
             {
 
                 case FAED_PolygonType.COPLANAR:
-                    (Vector3.Dot(normal, polygon.plaen.normal) > 0 ? front : back).Add(polygon);
+                    (Vector3.Dot(normal, polygon.plaen.normal) > 0 ? coplanarFront : coplanarBack).Add(polygon);
                     break;
                 case FAED_PolygonType.FRONT:
                     front.Add(polygon);
@@ -145,7 +145,7 @@ namespace FD.Dev.CSG
         {
 
             this.vertexs = vertexs;
-            plaen = new FAED_Plane(vertexs[0].position, vertexs[1].position, vertexs[3].position);
+            plaen = new FAED_Plane(vertexs[0].position, vertexs[1].position, vertexs[2].position);
         
         }
 
@@ -182,7 +182,7 @@ namespace FD.Dev.CSG
 
         }
 
-        public Vector3 position { get; private set; }
+        public Vector3 position { get; set; }
         public Vector3 normal { get; private set; }
 
         public void Flip()
@@ -215,7 +215,6 @@ namespace FD.Dev.CSG
         public FAED_CSGNode()
         {
 
-            polygons = null;
             plane = null;
             front = null;
             back = null;
@@ -231,11 +230,11 @@ namespace FD.Dev.CSG
             front = null;
             back = null;
 
-            if (polygons != null) Build(polygons);
+            /*if (polygons != null)*/ Build(polygons);
 
         }
 
-        public List<FAED_Polygon> polygons { get; set; }
+        public List<FAED_Polygon> polygons { get; set; } = new List<FAED_Polygon>();
         public FAED_Plane plane { get; set; }
         public FAED_CSGNode front { get; set; }
         public FAED_CSGNode back { get; set; }
@@ -314,17 +313,17 @@ namespace FD.Dev.CSG
             var front = new List<FAED_Polygon>();
             var back = new List<FAED_Polygon>();
 
-            for(int i = 0; i < this.polygons.Count; i++)
+            for(int i = 0; i < polygons.Count; i++)
             {
 
-                this.polygons[i].plaen.SplitPolygon(polygons[i], this.polygons, this.polygons, front, back);
+                plane.SplitPolygon(polygons[i], this.polygons, this.polygons, front, back);
 
             }
 
             if(front.Count > 0)
             {
 
-                if (this.front != null) this.front = new FAED_CSGNode();
+                if (this.front == null) this.front = new FAED_CSGNode();
 
                 this.front.Build(front);
 
@@ -333,7 +332,7 @@ namespace FD.Dev.CSG
             if (back.Count > 0)
             {
 
-                if (this.back != null) this.back = new FAED_CSGNode();
+                if (this.back == null) this.back = new FAED_CSGNode();
 
                 this.back.Build(front);
 
@@ -354,9 +353,9 @@ namespace FD.Dev.CSG
 
             }
 
-            node.front = front != null ? front : front.Copy();
-            node.back = back != null ? back : back.Copy();
-            node.plane = plane != null ? plane : plane.Copy();
+            node.front = front == null ? front : front.Copy();
+            node.back = back == null ? back : back.Copy();
+            node.plane = plane == null ? plane : plane.Copy();
             node.polygons = ls;
 
             return node;
@@ -382,6 +381,7 @@ namespace FD.Dev.CSG
 
         public static FAED_CSGNode Subtract(FAED_CSGNode a1, FAED_CSGNode b1)
         {
+
             var a = a1.Copy();
             var b = b1.Copy();
 
@@ -395,6 +395,7 @@ namespace FD.Dev.CSG
             a.Invert();
 
             return new FAED_CSGNode(a.AllPolygons());
+
         }
 
         public static FAED_CSGNode Intersect(FAED_CSGNode a1, FAED_CSGNode b1)
