@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace FD.Core.Editors
 {
@@ -44,10 +45,12 @@ namespace FD.Core.Editors
 
             var port = InstantiatePort(orientation, direction, capacity, type);
 
+            
             if(direction == Direction.Input)
             {
 
                 inputContainer.Add(port);
+                
 
             }
             else
