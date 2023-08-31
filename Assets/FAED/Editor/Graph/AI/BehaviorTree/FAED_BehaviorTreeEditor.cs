@@ -45,7 +45,7 @@ namespace FD.Core.Editors
         public FAED_BehaviorTreeGraph()
         {
 
-
+            AddSearchWindow();
             
 
         }
@@ -54,7 +54,63 @@ namespace FD.Core.Editors
         {
 
             searchWindow = ScriptableObject.CreateInstance<FAED_BehaviorTreeSearchWindow>();
-            nodeCreationRequest = v => 
+            searchWindow.Init(this);
+            nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
+
+        }
+
+        public void CreateBehaviorNode()
+        {
+
+            AddNode<FAED_BehaviorTreeNode>();
+
+        }
+
+    }
+
+
+    public class FAED_BehaviorTreeSearchWindow : ScriptableObject, ISearchWindowProvider
+    {
+
+        private FAED_BehaviorTreeGraph graph;
+
+        public void Init(FAED_BehaviorTreeGraph graph)
+        {
+
+            this.graph = graph;
+
+        }
+
+        public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
+        {
+
+            var tree = new List<SearchTreeEntry>()
+            {
+
+                new SearchTreeGroupEntry(new GUIContent("Create Behavior"), 0),
+                new SearchTreeGroupEntry(new GUIContent("Behavior"), 1),
+                new SearchTreeEntry(new GUIContent("BehaviorNode")){userData = "BehaviorNode", level = 2}
+
+            };
+
+            return tree;
+
+        }
+
+        public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
+        {
+
+
+            switch (searchTreeEntry.userData)
+            {
+
+                case "BehaviorNode":
+                    Debug.Log("ASDF");
+                    return true;
+                default:
+                    return false;
+
+            }
 
         }
 
@@ -108,26 +164,17 @@ namespace FD.Core.Editors
 
     }
 
-    public class FAED_BehaviorTreeSearchWindow : ScriptableObject, ISearchWindowProvider
+    public class FAED_BehaviorTreeNode : FAED_BaseNode
     {
-        public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
+
+        //클래스이름
+        public string className;
+
+        public FAED_BehaviorTreeNode()
         {
 
-            var tree = new List<SearchTreeEntry>()
-            {
+            titleContainer.style.backgroundColor = (Color)new Color32(0, 0, 150, 255);
 
-                new SearchTreeGroupEntry(new GUIContent("Create Behavior"), 0)
-
-            };
-
-            return tree;
-
-        }
-
-        public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
-        {
-
-            return true;
 
         }
 
