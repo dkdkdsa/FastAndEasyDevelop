@@ -209,7 +209,21 @@ namespace FD.Core.Editors
             titleContainer.style.backgroundColor = (Color)new Color32(0, 0, 150, 255);
 
             var inputPort = AddPort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single);
-            inputPort.portName = "";
+            inputPort.portName = "(BehaviorNode)";
+
+            var portLabel = inputPort.Q<Label>();
+            portLabel.style.color = (Color)new Color32(102, 102, 102, 255);
+            portLabel.style.unityFontStyleAndWeight = FontStyle.Italic;
+
+            var nameTextField = new TextField(title);
+            nameTextField.RegisterValueChangedCallback(evt =>
+            {
+
+                title = evt.newValue;
+
+            });
+
+            mainContainer.Add(nameTextField);
 
         }
 
