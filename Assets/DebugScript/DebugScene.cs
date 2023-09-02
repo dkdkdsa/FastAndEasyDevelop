@@ -8,6 +8,16 @@ public class DebugScene : MonoBehaviour
 {
 
 
+    private void Awake()
+    {
+
+        Vector3 v = Vector3.one;
+        v = Vector2.one;
+
+        Debug.Log(v);
+
+    }
+
     private void Update()
     {
 

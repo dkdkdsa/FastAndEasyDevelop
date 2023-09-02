@@ -15,7 +15,6 @@ namespace FD.Core.Editors
         protected T graphView;
         protected Toolbar toolbar;
 
-
         protected virtual void CreateGraph()
         {
 
@@ -23,12 +22,6 @@ namespace FD.Core.Editors
             graphView.StretchToParentSize();
 
             rootVisualElement.Add(graphView);
-
-        }
-        protected void SetZoom()
-        {
-
-
 
         }
 
