@@ -10,8 +10,10 @@ namespace FD.Core.Editors
 {
 
     //그래프뷰 에디터 창
-    public class FAED_BehaviorTreeBaseEditor : FAED_GraphBaseWindow<FAED_BehaviorTreeGraph>
+    internal class FAED_BehaviorTreeBaseEditor : FAED_GraphBaseWindow<FAED_BehaviorTreeGraph>
     {
+
+        private VisualElement graphRoot;
 
         [MenuItem("FAED/AI/BehaviorTree")]
         private static void Open()
@@ -27,19 +29,64 @@ namespace FD.Core.Editors
         protected override void OnEnable()
         {
 
-            base.OnEnable();
-            graphView.SetDrag();
-            graphView.SetMiniMap(new Rect(10, 30, 300, 300));
-            graphView.SetGrid();
-            graphView.SetZoom();
+
+            AddToolBar();
+            CreateGraphRoot();
+            SetUpGraphView();
+            CreateSpliteView();
+            ///
             var startPointNode = graphView.AddNode<FAED_BehaviorTreeStartNode>("StartPoint", new Vector2(300, 300), new Vector2(100, 100), true, false);
             startPointNode.Init(graphView);
 
         }
 
+        private void CreateGraphRoot()
+        {
+
+            graphRoot = new VisualElement();
+            graphRoot.style.position = Position.Relative;
+            graphRoot.style.flexDirection = FlexDirection.Row;
+            graphRoot.style.flexGrow = 1;
+
+            rootVisualElement.Add(graphRoot);
+
+        }
+
+        private void CreateSpliteView()
+        {
+
+            TwoPaneSplitView splitView = new TwoPaneSplitView(1, 300, TwoPaneSplitViewOrientation.Horizontal);
+            TwoPaneSplitView sysSplit = new TwoPaneSplitView(1, 300, TwoPaneSplitViewOrientation.Vertical); ;
+
+            sysSplit.contentContainer.Add(new FAED_CreateClassWindow());
+            sysSplit.contentContainer.Add(new FAED_VisualWindow("Insp", Position.Relative, new Color(0.2f, 0.2f, 0.2f)));
+
+            splitView.contentContainer.Add(graphView);
+            splitView.contentContainer.Add(sysSplit);
+            graphRoot.Add(splitView);
+
+        }
+
+        private void SetUpGraphView()
+        {
+
+            graphView = new FAED_BehaviorTreeGraph();
+
+            graphView.SetDrag();
+            graphView.SetMiniMap(new Rect(10, 30, 300, 300));
+            graphView.SetGrid();
+            graphView.SetZoom();
+
+            graphView.style.position = Position.Relative;
+            graphView.style.width = 1600;
+            graphView.style.flexGrow = 1;
+
+        }
+
+
     }
 
-    public class FAED_BehaviorTreeGraph : FAED_BaseGraphView
+    internal class FAED_BehaviorTreeGraph : FAED_BaseGraphView
     {
 
         private FAED_BehaviorTreeSearchWindow searchWindow;
@@ -121,7 +168,7 @@ namespace FD.Core.Editors
 
     }
 
-    public class FAED_BehaviorTreeSearchWindow : ScriptableObject, ISearchWindowProvider
+    internal class FAED_BehaviorTreeSearchWindow : ScriptableObject, ISearchWindowProvider
     {
 
         private FAED_BehaviorTreeGraph graph;
@@ -173,7 +220,7 @@ namespace FD.Core.Editors
 
     }
 
-    public class FAED_BehaviorTreeStartNode : FAED_BaseNode
+    internal class FAED_BehaviorTreeStartNode : FAED_BaseNode
     {
 
         private FAED_NodePortCreater portCreater;
@@ -195,7 +242,7 @@ namespace FD.Core.Editors
 
     }
 
-    public class FAED_BehaviorTreeNode : FAED_BaseNode
+    internal class FAED_BehaviorTreeNode : FAED_BaseNode
     {
 
         private FAED_NodePortCreater portCreater;
@@ -234,6 +281,120 @@ namespace FD.Core.Editors
 
         }
 
+
+    }
+
+    internal class FAED_VisualWindow : VisualElement
+    {
+
+        public VisualElement titleContainer { get; protected set; }
+        public Label titleLabel { get; protected set; }
+
+        public FAED_VisualWindow(string text, Position position, Color backGroundColor)
+        {
+
+            style.backgroundColor = backGroundColor;
+            style.position = position;
+
+            CreateTitleContainer();
+
+            titleLabel = new Label(text);
+            
+            titleContainer.Add(titleLabel);
+
+        }
+
+        private void CreateTitleContainer()
+        {
+
+            titleContainer = new VisualElement();
+            titleContainer.style.position = Position.Relative;
+            titleContainer.style.backgroundColor = Color.black;
+
+            Add(titleContainer);
+
+        }
+
+    }
+
+    internal class FAED_CreateClassWindow : FAED_VisualWindow
+    {
+
+        private ScrollView scrollView;
+
+        public FAED_CreateClassWindow() : base("NodeClass", Position.Relative, new Color(0.2f, 0.2f, 0.2f))
+        {
+
+            SetTitleContainer();
+            SetClassAddBtn();
+            SetScrollView();
+
+        }
+
+        private void SetTitleContainer()
+        {
+
+            titleContainer.style.flexDirection = FlexDirection.Row;
+            titleContainer.style.justifyContent = Justify.SpaceBetween;
+
+        }
+
+        private void SetClassAddBtn()
+        {
+
+            var btn = new Button(HandleClassCreateButtonClick);
+            btn.text = "+";
+            titleContainer.Add(btn);
+
+        }
+
+        private void SetScrollView()
+        {
+
+            scrollView = new ScrollView();
+            //scrollView.contentContainer.style.flexGrow = 0;
+            Add(scrollView);
+
+        }
+
+        private void HandleClassCreateButtonClick()
+        {
+
+            scrollView.contentContainer.Add(new FAED_ClassPanel("asdf"));
+
+        }
+
+    }
+
+    internal class FAED_ClassPanel : VisualElement
+    {
+
+        public Label titleLable { get; private set; }
+
+        public FAED_ClassPanel(string textTitle)
+        {
+
+            titleLable = new Label(textTitle);
+
+            style.backgroundColor = Color.red;
+
+            style.height = 30;
+            style.width = 50;
+            style.flexGrow = 0;
+
+            style.borderBottomLeftRadius = 10;
+            style.borderBottomRightRadius = 10;
+            style.borderTopLeftRadius = 10;
+            style.borderTopRightRadius = 10;
+
+            style.alignItems = Align.Center;
+            style.justifyContent = Justify.Center;
+
+            style.marginBottom = 10;
+
+            Add(titleLable);
+
+        }
 
     }
 

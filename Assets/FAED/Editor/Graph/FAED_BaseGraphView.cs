@@ -11,7 +11,6 @@ namespace FD.Core.Editors
 
     public class FAED_BaseGraphView : GraphView
     {
-
         public T AddNode<T>()where T : FAED_BaseNode, new()
         {
 

@@ -28,7 +28,7 @@ namespace FD.Core.Editors
 
         private void SettingWindow()
         {
-            var res = Resources.Load<FAED_SettingSO>("FAED/SettingSO");
+            var res = Resources.Load<FD.Core.FAED_SettingSO>("FAED/SettingSO");
 
             if (res == null)
             {
