@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using System.Linq;
+using System.IO;
 
 namespace FD.Core.Editors
 {
@@ -117,21 +118,7 @@ namespace FD.Core.Editors
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
 
-            var compPort = new List<Port>();
-
-            ports.ForEach(port =>
-            {
-
-                if(startPort != port && startPort.node != port.node)
-                {
-
-                    compPort.Add(port);
-
-                }
-
-            });
-
-            return compPort;
+            return ports.ToList().Where(x => x.direction != startPort.direction && x.node != startPort.node).ToList();
 
         }
 
@@ -300,6 +287,7 @@ namespace FD.Core.Editors
 
             titleLabel = new Label(text);
             
+            
             titleContainer.Add(titleLabel);
 
         }
@@ -310,6 +298,7 @@ namespace FD.Core.Editors
             titleContainer = new VisualElement();
             titleContainer.style.position = Position.Relative;
             titleContainer.style.backgroundColor = Color.black;
+            titleContainer.style.flexShrink = 0;
 
             Add(titleContainer);
 
@@ -321,6 +310,24 @@ namespace FD.Core.Editors
     {
 
         private ScrollView scrollView;
+
+        private const string DefaultScriptFormat =
+@"using UnityEngine;
+        
+public class {0}
+{{
+    
+    public @{1}_Value value;
+
+}}";
+
+        private const string DefaultValueStructFormat =
+@"using UnityEngine;
+
+public struct @{0}_Value
+{{
+
+}}";
 
         public FAED_CreateClassWindow() : base("NodeClass", Position.Relative, new Color(0.2f, 0.2f, 0.2f))
         {
@@ -352,7 +359,6 @@ namespace FD.Core.Editors
         {
 
             scrollView = new ScrollView();
-            //scrollView.contentContainer.style.flexGrow = 0;
             Add(scrollView);
 
         }
@@ -360,7 +366,20 @@ namespace FD.Core.Editors
         private void HandleClassCreateButtonClick()
         {
 
-            scrollView.contentContainer.Add(new FAED_ClassPanel("asdf"));
+            string path = EditorUtility.SaveFilePanel("Create Script", Application.dataPath, "NewScript", "cs");
+
+            if(path != string.Empty)
+            {
+
+                var fileNameArr = path.Split('/');
+                var fileName = fileNameArr[fileNameArr.Length - 1].Split('.')[0];
+                fileName.Replace(' ', '_');
+
+                File.WriteAllText(path, string.Format(DefaultScriptFormat, fileName));
+
+                scrollView.contentContainer.Add(new FAED_ClassPanel(fileName, path));
+
+            }
 
         }
 
@@ -370,22 +389,34 @@ namespace FD.Core.Editors
     {
 
         public Label titleLable { get; private set; }
+        public string filePath { get; private set; }
 
-        public FAED_ClassPanel(string textTitle)
+        public FAED_ClassPanel(string textTitle, string filePath)
         {
 
+            this.filePath = filePath;
             titleLable = new Label(textTitle);
 
-            style.backgroundColor = Color.red;
+            style.backgroundColor = new Color(0.1f, 0.1f, 0.1f);
 
             style.height = 30;
-            style.width = 50;
             style.flexGrow = 0;
+            style.flexShrink = 0;
 
             style.borderBottomLeftRadius = 10;
             style.borderBottomRightRadius = 10;
             style.borderTopLeftRadius = 10;
             style.borderTopRightRadius = 10;
+
+            style.borderBottomColor = Color.white;
+            style.borderLeftColor = Color.white;
+            style.borderRightColor = Color.white;
+            style.borderTopColor = Color.white;
+
+            style.borderRightWidth = 2;
+            style.borderBottomWidth = 2;
+            style.borderLeftWidth = 2;
+            style.borderTopWidth = 2;
 
             style.alignItems = Align.Center;
             style.justifyContent = Justify.Center;
@@ -393,7 +424,7 @@ namespace FD.Core.Editors
             style.marginBottom = 10;
 
             Add(titleLable);
-
+            this.filePath = filePath;
         }
 
     }
