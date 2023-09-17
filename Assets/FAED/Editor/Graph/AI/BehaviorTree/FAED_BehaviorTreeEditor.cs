@@ -6,21 +6,26 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using System.Linq;
 using System.IO;
+using System;
+using FD.Dev.AI;
+
 
 namespace FD.Core.Editors
 {
+
 
     //그래프뷰 에디터 창
     internal class FAED_BehaviorTreeBaseEditor : FAED_GraphBaseWindow<FAED_BehaviorTreeGraph>
     {
 
         private VisualElement graphRoot;
+        private FAED_BehaviorTree behaviorTree;
 
         [MenuItem("FAED/AI/BehaviorTree")]
         private static void Open()
         {
 
-            var window = GetWindow<FAED_BehaviorTreeBaseEditor>();
+            var window = CreateWindow<FAED_BehaviorTreeBaseEditor>();
             window.titleContent.text = "BehaviorTree Editor";
             window.maximized = true;
             window.Show();
@@ -30,14 +35,13 @@ namespace FD.Core.Editors
         protected override void OnEnable()
         {
 
-
             AddToolBar();
+            SetUpToolbar();
             CreateGraphRoot();
             SetUpGraphView();
             CreateSpliteView();
-            ///
-            var startPointNode = graphView.AddNode<FAED_BehaviorTreeStartNode>("StartPoint", new Vector2(300, 300), new Vector2(100, 100), true, false);
-            startPointNode.Init(graphView);
+
+            graphView.AddElement(new FAED_BehaviorRootNode(graphView));
 
         }
 
@@ -57,13 +61,10 @@ namespace FD.Core.Editors
         {
 
             TwoPaneSplitView splitView = new TwoPaneSplitView(1, 300, TwoPaneSplitViewOrientation.Horizontal);
-            TwoPaneSplitView sysSplit = new TwoPaneSplitView(1, 300, TwoPaneSplitViewOrientation.Vertical); ;
 
-            sysSplit.contentContainer.Add(new FAED_CreateClassWindow());
-            sysSplit.contentContainer.Add(new FAED_VisualWindow("Insp", Position.Relative, new Color(0.2f, 0.2f, 0.2f)));
 
             splitView.contentContainer.Add(graphView);
-            splitView.contentContainer.Add(sysSplit);
+            splitView.contentContainer.Add(new FAED_VisualWindow("Insp", Position.Relative, new Color(0.2f, 0.2f, 0.2f)));
             graphRoot.Add(splitView);
 
         }
@@ -84,6 +85,47 @@ namespace FD.Core.Editors
 
         }
 
+        private void SetUpToolbar()
+        {
+
+            toolbar.Add(new Button(Save));
+            toolbar.Add(new Button(Load));
+
+        }
+
+        private void Load()
+        {
+
+
+
+        }
+
+        private void Save()
+        {
+
+            if(behaviorTree == null)
+            {
+
+                var path = EditorUtility.SaveFilePanel("SaveBehaviorTree", Application.dataPath, "NewBehaviorTree", "assets");
+                behaviorTree = ScriptableObject.CreateInstance<FAED_BehaviorTree>();
+                
+                AssetDatabase.CreateAsset(behaviorTree, path);
+
+            }
+
+            var nodeLs = graphView.Query<FAED_BehaviorTreeNode>().ToList();
+
+            foreach(var node in nodeLs)
+            {
+
+                var obj = ScriptableObject.CreateInstance(node.classType);
+                AssetDatabase.AddObjectToAsset(obj, behaviorTree);
+
+                behaviorTree.nodes.Add(obj as FAED_Node);
+
+            }
+
+        }
 
     }
 
@@ -105,13 +147,6 @@ namespace FD.Core.Editors
             searchWindow = ScriptableObject.CreateInstance<FAED_BehaviorTreeSearchWindow>();
             searchWindow.Init(this);
             nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
-
-        }
-
-        public FAED_BehaviorTreeNode CreateBehaviorNode(Vector2 pos)
-        {
-
-            return AddNode<FAED_BehaviorTreeNode>("New Behavior Node", new Vector2(100, 100), pos);
 
         }
 
@@ -174,10 +209,20 @@ namespace FD.Core.Editors
             {
 
                 new SearchTreeGroupEntry(new GUIContent("Create Behavior"), 0),
-                new SearchTreeGroupEntry(new GUIContent("Behavior"), 1),
-                new SearchTreeEntry(new GUIContent("BehaviorNode")){userData = "BehaviorNode", level = 2}
+                new SearchTreeGroupEntry(new GUIContent("Node"), 1),
 
             };
+
+            var types = TypeCache.GetTypesDerivedFrom<FAED_Node>();
+
+            var nodes = types.Where(x => x.IsAbstract == false && x.Name != "FAED_RootNode").ToList();
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+
+                tree.Add(new SearchTreeEntry(new GUIContent(nodes[i].Name)) { userData = nodes[i], level = 2 });
+
+            }
 
             return tree;
 
@@ -186,44 +231,49 @@ namespace FD.Core.Editors
         public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
 
-            switch (searchTreeEntry.userData)
+
+            if(searchTreeEntry.userData is Type)
             {
 
-                case "BehaviorNode":
-                    {
+                var t = searchTreeEntry.userData as Type;
 
-                        var node = graph.CreateBehaviorNode(context.screenMousePosition);
-                        node.Init(graph);
+                if (t.IsSubclassOf(typeof(FAED_ControlFlowNode)))
+                {
 
-                    }
+                    var node = new FAED_BehaviorChildNode(graph, t.Name, "ControlFlow", t);
+                    node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                    node.AddPort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi);
+                    node.transform.position = context.screenMousePosition;
 
-                    return true;
-                default:
-                    return false;
+                    graph.AddElement(node);
+
+                }
+                else if(t.IsSubclassOf(typeof(FAED_DecoratorNode)))
+                {
+
+                    var node = new FAED_BehaviorChildNode(graph, t.Name, "Decorator", t);
+                    node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                    node.AddPort(Orientation.Vertical, Direction.Output, Port.Capacity.Single);
+                    node.transform.position = context.screenMousePosition;
+
+                    graph.AddElement(node);
+
+                }
+                else
+                {
+
+                    var node = new FAED_BehaviorActionNode(t.Name, "Behavior", t);
+                    node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                    node.transform.position = context.screenMousePosition;
+
+                    graph.AddElement(node);
+
+
+                }
 
             }
 
-        }
-
-    }
-
-    internal class FAED_BehaviorTreeStartNode : FAED_BaseNode
-    {
-
-        private FAED_NodePortCreater portCreater;
-
-        public FAED_BehaviorTreeStartNode()
-        {
-
-            titleContainer.style.backgroundColor = (Color)new Color32(150, 0, 0, 255);
-
-        
-        }
-
-        public void Init(FAED_BehaviorTreeGraph graphView)
-        {
-
-            portCreater = new FAED_NodePortCreater(this, graphView, "+");
+            return false;
 
         }
 
@@ -232,42 +282,71 @@ namespace FD.Core.Editors
     internal class FAED_BehaviorTreeNode : FAED_BaseNode
     {
 
-        private FAED_NodePortCreater portCreater;
-        //클래스이름
-        public string className;
+        public Type classType;
 
-
-        public FAED_BehaviorTreeNode()
+        public FAED_BehaviorTreeNode() : base(AssetDatabase.GetAssetPath(Resources.Load<VisualTreeAsset>("BehaviorNode")))
         {
 
-            titleContainer.style.backgroundColor = (Color)new Color32(0, 0, 150, 255);
+            var style = Resources.Load<StyleSheet>("BehaviorNodeStyle");
 
-            var inputPort = AddPort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single);
-            inputPort.portName = "(BehaviorNode)";
+            styleSheets.Add(style);
+            AddToClassList("node");
 
-            var portLabel = inputPort.Q<Label>();
-            portLabel.style.color = (Color)new Color32(102, 102, 102, 255);
-            portLabel.style.unityFontStyleAndWeight = FontStyle.Italic;
-
-            var nameTextField = new TextField(title);
-            nameTextField.RegisterValueChangedCallback(evt =>
-            {
-
-                title = evt.newValue;
-
-            });
-
-            mainContainer.Add(nameTextField);
+            RefreshAll();
 
         }
 
-        public void Init(FAED_BehaviorTreeGraph graphView)
+    }
+
+    internal class FAED_BehaviorActionNode : FAED_BehaviorTreeNode
+    {        
+
+        public FAED_BehaviorActionNode(string className, string message, Type classType) : base()
         {
 
-            portCreater = new FAED_NodePortCreater(this, graphView, "+");
+            title = className;
+            mainContainer.Q<Label>("description").text = message;
+            this.classType = classType;
 
         }
 
+    }
+
+    internal class FAED_BehaviorRootNode : FAED_BehaviorChildNode
+    {
+
+        public FAED_BehaviorRootNode(FAED_BehaviorTreeGraph graph) : base(graph, "StartPoint", "", typeof(FAED_RootNode))
+        {
+
+            AddPort(Orientation.Vertical, Direction.Output, Port.Capacity.Single);
+
+        }
+
+    }
+
+    internal class FAED_BehaviorChildNode : FAED_BehaviorTreeNode
+    {
+
+        protected FAED_BehaviorTreeGraph graph;
+
+        public FAED_BehaviorChildNode(FAED_BehaviorTreeGraph graph, string title, string message, Type classType) : base()
+        {
+
+            this.title = title;
+            mainContainer.Q<Label>("description").text = message;
+            this.classType = classType;
+            this.graph = graph;
+
+        }
+
+        public List<GUID> ConnectNode()
+        {
+
+            var targetEdge = graph.edges.ToList().Where(x => x.output.node == this).Select(x => x.input.node).ToList();
+
+            return targetEdge.OrderBy(x => x.transform.position.x).ToList().ConvertAll(x => (x as FAED_BehaviorChildNode).guid);
+
+        }
 
     }
 
@@ -301,174 +380,6 @@ namespace FD.Core.Editors
             titleContainer.style.flexShrink = 0;
 
             Add(titleContainer);
-
-        }
-
-    }
-
-    internal class FAED_CreateClassWindow : FAED_VisualWindow
-    {
-
-        private ScrollView scrollView;
-
-        private const string DefaultScriptFormat =
-@"using UnityEngine;
-        
-public class {0}
-{{
-    
-    public @{1}_Value value;
-
-}}";
-
-        private const string DefaultValueStructFormat =
-@"using UnityEngine;
-
-public struct @{0}_Value
-{{
-
-}}";
-
-        public FAED_CreateClassWindow() : base("NodeClass", Position.Relative, new Color(0.2f, 0.2f, 0.2f))
-        {
-
-            SetTitleContainer();
-            SetClassAddBtn();
-            SetScrollView();
-
-        }
-
-        private void SetTitleContainer()
-        {
-
-            titleContainer.style.flexDirection = FlexDirection.Row;
-            titleContainer.style.justifyContent = Justify.SpaceBetween;
-
-        }
-
-        private void SetClassAddBtn()
-        {
-
-            var btn = new Button(HandleClassCreateButtonClick);
-            btn.text = "+";
-            titleContainer.Add(btn);
-
-        }
-
-        private void SetScrollView()
-        {
-
-            scrollView = new ScrollView();
-            Add(scrollView);
-
-        }
-
-        private void HandleClassCreateButtonClick()
-        {
-
-            string path = EditorUtility.SaveFilePanel("Create Script", Application.dataPath, "NewScript", "cs");
-
-            if(path != string.Empty)
-            {
-
-                var fileNameArr = path.Split('/');
-                var fileName = fileNameArr[fileNameArr.Length - 1].Split('.')[0];
-                fileName.Replace(' ', '_');
-
-                File.WriteAllText(path, string.Format(DefaultScriptFormat, fileName));
-
-                scrollView.contentContainer.Add(new FAED_ClassPanel(fileName, path));
-
-            }
-
-        }
-
-    }
-
-    internal class FAED_ClassPanel : VisualElement
-    {
-
-        public Label titleLable { get; private set; }
-        public string filePath { get; private set; }
-
-        public FAED_ClassPanel(string textTitle, string filePath)
-        {
-
-            this.filePath = filePath;
-            titleLable = new Label(textTitle);
-
-            style.backgroundColor = new Color(0.1f, 0.1f, 0.1f);
-
-            style.height = 30;
-            style.flexGrow = 0;
-            style.flexShrink = 0;
-
-            style.borderBottomLeftRadius = 10;
-            style.borderBottomRightRadius = 10;
-            style.borderTopLeftRadius = 10;
-            style.borderTopRightRadius = 10;
-
-            style.borderBottomColor = Color.white;
-            style.borderLeftColor = Color.white;
-            style.borderRightColor = Color.white;
-            style.borderTopColor = Color.white;
-
-            style.borderRightWidth = 2;
-            style.borderBottomWidth = 2;
-            style.borderLeftWidth = 2;
-            style.borderTopWidth = 2;
-
-            style.alignItems = Align.Center;
-            style.justifyContent = Justify.Center;
-
-            style.marginBottom = 10;
-
-            Add(titleLable);
-            this.filePath = filePath;
-        }
-
-    }
-
-    internal class FAED_NodePortCreater
-    {
-
-        private FAED_BaseNode node;
-        private FAED_BehaviorTreeGraph graphView;
-
-        public Button portAddButton { get; private set; }
-
-        internal FAED_NodePortCreater(FAED_BaseNode node, FAED_BehaviorTreeGraph graphView, string buttonText = "")
-        {
-
-            this.node = node;
-            this.graphView = graphView;
-
-            portAddButton = new Button(HandlePortAddButton);
-            portAddButton.text = buttonText;
-            node.titleButtonContainer.Add(portAddButton);
-
-        }
-
-        private void HandlePortAddButton()
-        {
-
-            var port = node.AddPort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(float));
-            port.portName = $"{node.outputContainer.childCount}";
-
-            var portRemoveButton = new Button(() => HandlePortRemoveButton(port));
-
-            portRemoveButton.text = "X";
-            portRemoveButton.style.backgroundColor = (Color)new Color32(255, 51, 51, 255);
-
-            port.Add(portRemoveButton);
-
-        }
-        private void HandlePortRemoveButton(Port port)
-        {
-
-            graphView.RemovePort(node, port);
-
-            node.RefreshAll();
 
         }
 

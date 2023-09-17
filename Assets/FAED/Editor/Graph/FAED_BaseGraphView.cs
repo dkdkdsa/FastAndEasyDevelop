@@ -82,7 +82,7 @@ namespace FD.Core.Editors
         }
         public void SetGrid(string ussPath)
         {
-
+            
             var style = Resources.Load<StyleSheet>(ussPath);
             styleSheets.Add(style);
 
