@@ -35,13 +35,24 @@ namespace FD.Core.Editors
         protected override void OnEnable()
         {
 
+            behaviorTree = ScriptableObject.CreateInstance<FAED_BehaviorTree>();
+
             AddToolBar();
             SetUpToolbar();
             CreateGraphRoot();
             SetUpGraphView();
             CreateSpliteView();
 
-            graphView.AddElement(new FAED_BehaviorRootNode(graphView));
+            Save();
+
+            var root = new FAED_BehaviorRootNode(graphView);
+
+            root.nodeObject.name = "RootNode";
+
+            graphView.AddAssets(root);
+            graphView.AddElement(root);
+
+            root.RefreshAll();
 
         }
 
@@ -61,7 +72,6 @@ namespace FD.Core.Editors
         {
 
             TwoPaneSplitView splitView = new TwoPaneSplitView(1, 300, TwoPaneSplitViewOrientation.Horizontal);
-
 
             splitView.contentContainer.Add(graphView);
             splitView.contentContainer.Add(new FAED_VisualWindow("Insp", Position.Relative, new Color(0.2f, 0.2f, 0.2f)));
@@ -83,13 +93,20 @@ namespace FD.Core.Editors
             graphView.style.width = 1600;
             graphView.style.flexGrow = 1;
 
+            graphView.Init(behaviorTree);
+
         }
 
         private void SetUpToolbar()
         {
 
-            toolbar.Add(new Button(Save));
-            toolbar.Add(new Button(Load));
+            var saveBtn = new Button(Save);
+            saveBtn.text = "SaveFile";
+            var loadBtn = new Button(Load);
+            loadBtn.text = "LoadFile";
+
+            toolbar.Add(saveBtn);
+            toolbar.Add(loadBtn);
 
         }
 
@@ -99,33 +116,62 @@ namespace FD.Core.Editors
 
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void Save()
         {
 
-            if(behaviorTree == null)
+            if(!behaviorTree.isMemory)
             {
 
-                var path = EditorUtility.SaveFilePanel("SaveBehaviorTree", Application.dataPath, "NewBehaviorTree", "assets");
-                behaviorTree = ScriptableObject.CreateInstance<FAED_BehaviorTree>();
-                
+                var path = EditorUtility.SaveFilePanelInProject("SaveBehaviorTree", "NewBehaviorTree", "asset", "Save");
+
+
                 AssetDatabase.CreateAsset(behaviorTree, path);
 
+                behaviorTree.isMemory = true;
+
             }
 
-            var nodeLs = graphView.Query<FAED_BehaviorTreeNode>().ToList();
+            var nodeLs = graphView.edges.ToList();
 
-            foreach(var node in nodeLs)
+            nodeLs.ForEach((x) =>
             {
 
-                var obj = ScriptableObject.CreateInstance(node.classType);
-                AssetDatabase.AddObjectToAsset(obj, behaviorTree);
+                var baseNode = behaviorTree.nodes.Find(node => node.guid == (x.output.node as FAED_BaseNode).guid);
+                var childNode = behaviorTree.nodes.Find(node => node.guid == (x.input.node as FAED_BaseNode).guid);
 
-                behaviorTree.nodes.Add(obj as FAED_Node);
+                if(baseNode as FAED_ControlFlowNode != null)
+                {
 
-            }
+                    var baseControllNode = baseNode as FAED_ControlFlowNode;
+                    baseControllNode.childrens.Add(childNode);
+
+                }
+                else if(baseNode as FAED_DecoratorNode != null)
+                {
+
+                    var baseDecoNode = baseNode as FAED_DecoratorNode;
+                    baseDecoNode.children = childNode;
+
+                }
+                else if(baseNode as FAED_RootNode != null)
+                {
+
+                    var baseDecoNode = baseNode as FAED_RootNode;
+                    baseDecoNode.children = childNode;
+
+                }
+
+
+
+            });
+
+            AssetDatabase.SaveAssets();
 
         }
+
 
     }
 
@@ -133,11 +179,19 @@ namespace FD.Core.Editors
     {
 
         private FAED_BehaviorTreeSearchWindow searchWindow;
+        private FAED_BehaviorTree behaviorTree;
 
         public FAED_BehaviorTreeGraph()
         {
 
             AddSearchWindow();
+
+        }
+
+        public void Init(FAED_BehaviorTree behaviorTree)
+        {
+
+            this.behaviorTree = behaviorTree;
 
         }
 
@@ -185,6 +239,15 @@ namespace FD.Core.Editors
             }
 
             node.RefreshAll();
+
+        }
+
+        public void AddAssets(FAED_BehaviorTreeNode node)
+        {
+
+            AssetDatabase.AddObjectToAsset(node.nodeObject, behaviorTree);
+            behaviorTree.nodes.Add(node.nodeObject);
+            //AssetDatabase.SaveAssets();
 
         }
 
@@ -245,6 +308,7 @@ namespace FD.Core.Editors
                     node.AddPort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi);
                     node.transform.position = context.screenMousePosition;
 
+                    graph.AddAssets(node);
                     graph.AddElement(node);
 
                 }
@@ -256,6 +320,7 @@ namespace FD.Core.Editors
                     node.AddPort(Orientation.Vertical, Direction.Output, Port.Capacity.Single);
                     node.transform.position = context.screenMousePosition;
 
+                    graph.AddAssets(node);
                     graph.AddElement(node);
 
                 }
@@ -266,6 +331,7 @@ namespace FD.Core.Editors
                     node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
                     node.transform.position = context.screenMousePosition;
 
+                    graph.AddAssets(node);
                     graph.AddElement(node);
 
 
@@ -282,13 +348,15 @@ namespace FD.Core.Editors
     internal class FAED_BehaviorTreeNode : FAED_BaseNode
     {
 
-        public Type classType;
+        public FAED_Node nodeObject;
 
-        public FAED_BehaviorTreeNode() : base(AssetDatabase.GetAssetPath(Resources.Load<VisualTreeAsset>("BehaviorNode")))
+        public FAED_BehaviorTreeNode(Type classType) : base(AssetDatabase.GetAssetPath(Resources.Load<VisualTreeAsset>("BehaviorNode")))
         {
 
             var style = Resources.Load<StyleSheet>("BehaviorNodeStyle");
 
+            nodeObject = ScriptableObject.CreateInstance(classType) as FAED_Node;
+            nodeObject.guid = guid;
             styleSheets.Add(style);
             AddToClassList("node");
 
@@ -301,12 +369,11 @@ namespace FD.Core.Editors
     internal class FAED_BehaviorActionNode : FAED_BehaviorTreeNode
     {        
 
-        public FAED_BehaviorActionNode(string className, string message, Type classType) : base()
+        public FAED_BehaviorActionNode(string className, string message, Type classType) : base(classType)
         {
 
             title = className;
             mainContainer.Q<Label>("description").text = message;
-            this.classType = classType;
 
         }
 
@@ -318,6 +385,7 @@ namespace FD.Core.Editors
         public FAED_BehaviorRootNode(FAED_BehaviorTreeGraph graph) : base(graph, "StartPoint", "", typeof(FAED_RootNode))
         {
 
+            name = "RootNode";
             AddPort(Orientation.Vertical, Direction.Output, Port.Capacity.Single);
 
         }
@@ -329,12 +397,11 @@ namespace FD.Core.Editors
 
         protected FAED_BehaviorTreeGraph graph;
 
-        public FAED_BehaviorChildNode(FAED_BehaviorTreeGraph graph, string title, string message, Type classType) : base()
+        public FAED_BehaviorChildNode(FAED_BehaviorTreeGraph graph, string title, string message, Type classType) : base(classType)
         {
 
             this.title = title;
             mainContainer.Q<Label>("description").text = message;
-            this.classType = classType;
             this.graph = graph;
 
         }

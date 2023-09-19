@@ -33,7 +33,7 @@ namespace FD.Dev.AI
     public abstract class FAED_ControlFlowNode : FAED_Node
     {
 
-        public List<FAED_Node> childrens;
+        public List<FAED_Node> childrens = new List<FAED_Node>();
 
     }
 
