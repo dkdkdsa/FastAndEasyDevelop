@@ -42,12 +42,14 @@ namespace FD.Core.Editors
             graphView.SetMiniMap(new Rect(10, 10, 300, 300));
 
         }
+
         private void SetUpInspacter()
         {
 
             inspactor = new FAED_VisualWindow("Inspactor", Position.Relative, new Color(0.3f, 0.3f, 0.3f));
 
         }
+
         private void SetUpSplit()
         {
 
@@ -57,6 +59,7 @@ namespace FD.Core.Editors
             graphRoot.Add(split);
 
         }
+
         protected override void OnEnable()
         {
             
