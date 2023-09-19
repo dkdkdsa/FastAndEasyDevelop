@@ -12,12 +12,19 @@ namespace FD.Core.Editors
     public class FAED_BaseNode : Node
     {
         
-        public Guid guid { get; set; }
+        public GUID guid { get; set; }
 
         public FAED_BaseNode()
         {
 
-            guid = Guid.NewGuid();
+            guid = GUID.Generate();
+
+        }
+
+        public FAED_BaseNode(string path) : base(path)
+        {
+
+            guid = GUID.Generate();
 
         }
 
@@ -59,6 +66,8 @@ namespace FD.Core.Editors
                 outputContainer.Add(port);
 
             }
+
+            port.portName = "";
 
             RefreshAll();
 

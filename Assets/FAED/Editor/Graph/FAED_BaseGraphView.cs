@@ -11,7 +11,6 @@ namespace FD.Core.Editors
 
     public class FAED_BaseGraphView : GraphView
     {
-
         public T AddNode<T>()where T : FAED_BaseNode, new()
         {
 
@@ -83,7 +82,7 @@ namespace FD.Core.Editors
         }
         public void SetGrid(string ussPath)
         {
-
+            
             var style = Resources.Load<StyleSheet>(ussPath);
             styleSheets.Add(style);
 
