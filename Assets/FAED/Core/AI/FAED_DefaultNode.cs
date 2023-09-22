@@ -19,9 +19,48 @@ namespace FD.Dev.AI
     {
 
         [HideInInspector] public GUID guid;
-        public Vector2 editorPos;
+        [HideInInspector] public Rect editorPos;
 
-        public abstract FAED_NodeState Execute();
+        protected FAED_NodeState state;
+        protected bool started;
+
+        public FAED_NodeState Execute()
+        {
+
+            if (!started)
+            {
+
+                Enable();
+                started = true;
+
+            }
+
+            state = OnExecute();
+
+            if (state == FAED_NodeState.Failure || state == FAED_NodeState.Success)
+            {
+
+                Disable();
+                started = false;
+
+            }
+
+            return state;
+
+        }
+
+        public void Breaking()
+        {
+
+            Disable();
+            started = false;
+
+        }
+
+        protected virtual void Enable() { }
+        protected virtual void Disable() { }
+        protected abstract FAED_NodeState OnExecute();
+
 
     }
 
@@ -30,14 +69,14 @@ namespace FD.Dev.AI
     public abstract class FAED_CompositeNode : FAED_Node
     {
 
-        public List<FAED_Node> childrens = new List<FAED_Node>();
+        [HideInInspector] public List<FAED_Node> childrens = new List<FAED_Node>();
 
     }
 
     public abstract class FAED_DecoratorNode : FAED_Node 
     {
 
-        public FAED_Node children;
+        [HideInInspector] public FAED_Node children;
 
     }
 

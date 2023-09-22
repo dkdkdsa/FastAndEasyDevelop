@@ -7,7 +7,8 @@ namespace FD.Dev.AI
 
     public class FAED_SequenceNode : FAED_CompositeNode
     {
-        public override FAED_NodeState Execute()
+
+        protected override FAED_NodeState OnExecute()
         {
             return FAED_NodeState.Success;
         }

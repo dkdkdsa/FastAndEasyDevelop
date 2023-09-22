@@ -101,7 +101,16 @@ namespace FD.Core.Editors
             foreach (var node in nodeList)
             {
 
-                node.nodeObject.editorPos = node.GetPosition().position;
+                node.nodeObject.editorPos = node.localBound;
+
+                var com = node.nodeObject as FAED_CompositeNode;
+
+                if(com != null)
+                {
+
+                    com.childrens.Clear();
+
+                }
 
                 if (saveData.behaviorTree.nodes.Contains(node.nodeObject)) continue;
 
@@ -148,10 +157,11 @@ namespace FD.Core.Editors
                 if(node as FAED_ActionNode)
                 {
 
-                    var obj = new FAED_BehaviorChildNode(node.GetType(), Port.Capacity.Single, node.GetType().Name, "ActionNode");
+                    var obj = new FAED_BehaviorTreeBaseNode(node.GetType(), node.GetType().Name, "ActionNode");
+                    obj.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
                     obj.nodeObject = node;
                     obj.guid = node.guid;
-                    obj.transform.position = node.editorPos;
+                    obj.SetPosition(node.editorPos);
                     obj.OnSelectEvent += inspactor.HandleCreateInspactor;
                     graphView.AddElement(obj);
 
@@ -163,7 +173,7 @@ namespace FD.Core.Editors
                     obj.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
                     obj.nodeObject = node;
                     obj.guid = node.guid;
-                    obj.transform.position = node.editorPos;
+                    obj.SetPosition(node.editorPos);
                     obj.OnSelectEvent += inspactor.HandleCreateInspactor;
                     graphView.AddElement(obj);
 
@@ -174,7 +184,7 @@ namespace FD.Core.Editors
                     var obj = new FAED_BehaviorChildNode(node.GetType(), Port.Capacity.Single, "StartPoint", "Root");
                     obj.nodeObject = node;
                     obj.guid = node.guid;
-                    obj.transform.position = node.editorPos;
+                    obj.SetPosition(node.editorPos);
                     obj.OnSelectEvent += inspactor.HandleCreateInspactor;
                     graphView.AddElement(obj);
 
@@ -226,26 +236,28 @@ namespace FD.Core.Editors
         private void ConnectNode(FAED_BehaviorTreeBaseNode input, FAED_BehaviorTreeBaseNode output)
         {
 
-            if(input.nodeObject as FAED_CompositeNode != null)
+            if(output.nodeObject as FAED_CompositeNode != null)
             {
 
-                var obj = input.nodeObject as FAED_CompositeNode;
-                obj.childrens.Add(output.nodeObject);
+                var obj = output.nodeObject as FAED_CompositeNode;
+
+                obj.childrens.Add(input.nodeObject);
+                obj.childrens = obj.childrens.OrderBy(x => x.editorPos.x).ToList();
 
             }
             else if(output.nodeObject as FAED_DecoratorNode != null)
             {
 
-                var obj = input.nodeObject as FAED_DecoratorNode;
-                obj.children = output.nodeObject;
+                var obj = output.nodeObject as FAED_DecoratorNode;
+                obj.children = input.nodeObject;
 
             }
-            else
+            else if(output.nodeObject as FAED_RootNode != null)
             {
 
 
-                var obj = input.nodeObject as FAED_RootNode;
-                obj.children = output.nodeObject;
+                var obj = output.nodeObject as FAED_RootNode;
+                obj.children = input.nodeObject;
 
             }
 
@@ -413,11 +425,12 @@ namespace FD.Core.Editors
 
                     var type = SearchTreeEntry.userData as Type;
 
-                    if(type.IsSubclassOf(typeof(FAED_ActionNode)))
+                    if (type.IsSubclassOf(typeof(FAED_ActionNode)))
                     {
 
-                        var node = new FAED_BehaviorChildNode(type, Port.Capacity.Single, type.Name, "ActionNode");
-                        node.transform.position = context.screenMousePosition;
+                        var node = new FAED_BehaviorTreeBaseNode(type, type.Name, "ActionNode");
+                        node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                        node.transform.position = graphView.ChangeCoordinatesTo(graphView.contentContainer, context.screenMousePosition);
 
                         graphView.AddGraphNode(node);
 
@@ -432,7 +445,7 @@ namespace FD.Core.Editors
                         graphView.AddGraphNode(node);
 
                     }
-                    else if (type.IsSubclassOf(typeof(FAED_CompositeNode)))
+                    else if (type.IsSubclassOf(typeof(FAED_DecoratorNode)))
                     {
 
 
