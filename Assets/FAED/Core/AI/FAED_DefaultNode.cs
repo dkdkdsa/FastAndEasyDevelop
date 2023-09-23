@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace FD.Dev.AI
@@ -49,6 +50,13 @@ namespace FD.Dev.AI
 
         }
 
+        public virtual FAED_Node Copy()
+        {
+
+            return Instantiate(this);
+
+        }
+
         public void Breaking()
         {
 
@@ -71,12 +79,33 @@ namespace FD.Dev.AI
 
         [HideInInspector] public List<FAED_Node> childrens = new List<FAED_Node>();
 
+        public override FAED_Node Copy()
+        {
+
+            var node = Instantiate(this);
+
+            node.childrens = childrens.ConvertAll(x => x.Copy());
+
+            return node;
+
+        }
+
     }
 
     public abstract class FAED_DecoratorNode : FAED_Node 
     {
 
         [HideInInspector] public FAED_Node children;
+
+        public override FAED_Node Copy()
+        {
+
+            var node = Instantiate(this);
+            node.children = Instantiate(children);
+            
+            return node;
+
+        }
 
     }
 

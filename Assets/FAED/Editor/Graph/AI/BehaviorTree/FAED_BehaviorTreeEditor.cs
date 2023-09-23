@@ -122,6 +122,8 @@ namespace FD.Core.Editors
 
             SaveConnect();
 
+            saveData.behaviorTree.SettingRootNode();
+
         }
 
         private void HandleLoad()

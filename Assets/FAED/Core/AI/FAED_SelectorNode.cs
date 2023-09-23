@@ -5,10 +5,10 @@ using UnityEngine;
 namespace FD.Dev.AI
 {
 
-    public class FAED_SequenceNode : FAED_CompositeNode
+    public class FAED_SelectorNode : FAED_CompositeNode
     {
 
-        protected int count;
+        private int count;
 
         protected override void Enable()
         {
@@ -19,15 +19,15 @@ namespace FD.Dev.AI
 
         protected override FAED_NodeState OnExecute()
         {
-            
+
             var state = childrens[count].Execute();
 
-            if(state == FAED_NodeState.Success)
+            if (state == FAED_NodeState.Failure)
             {
 
                 count++;
 
-                if (count == childrens.Count) return FAED_NodeState.Success;
+                if (count == childrens.Count) return FAED_NodeState.Failure;
                 else return FAED_NodeState.Running;
 
             }
@@ -39,5 +39,3 @@ namespace FD.Dev.AI
     }
 
 }
-
-

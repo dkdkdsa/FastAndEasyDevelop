@@ -13,7 +13,17 @@ namespace FD.Dev.AI
         protected override FAED_NodeState OnExecute()
         {
 
-            return FAED_NodeState.Success;
+            return children.Execute();
+
+        }
+
+        public override FAED_Node Copy()
+        {
+
+            var node = Instantiate(this);
+            node.children = children.Copy();
+
+            return node;
 
         }
 

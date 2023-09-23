@@ -1,99 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5916009142801519556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e5912eec2f50f2458054b931bb9ea2e, type: 3}
-  m_Name: AI
-  m_EditorClassIdentifier: 
-  nodes:
-  - {fileID: 3131881461454387007}
-  - {fileID: 802525083929898686}
-  - {fileID: -550677045626238127}
-  - {fileID: -404559232354119146}
-  - {fileID: 4921113595221358003}
---- !u!114 &-550677045626238127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d19c144124aaf74f916d4ea0389b099, type: 3}
-  m_Name: FAED_TestNode
-  m_EditorClassIdentifier: 
-  editorPos:
-    serializedVersion: 2
-    x: 148
-    y: 474.4
-    width: 203.20001
-    height: 83.19998
---- !u!114 &-404559232354119146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d19c144124aaf74f916d4ea0389b099, type: 3}
-  m_Name: FAED_TestNode
-  m_EditorClassIdentifier: 
-  editorPos:
-    serializedVersion: 2
-    x: 566.4
-    y: 565.6
-    width: 203.19995
-    height: 84
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2168c5020484e24385bf6d1738d82d0, type: 3}
-  m_Name: NewBehaviorTree
-  m_EditorClassIdentifier: 
-  behaviorTree: {fileID: -5916009142801519556}
-  connectData:
-  - inputGuid: fa881bb37725bb14fa8237f0bbb61b92
-    outputGuid: 091ad1d0c5165fd45bd3f35a4a8e355e
-  - inputGuid: 5cd9daa36741d2340965c632dcafde98
-    outputGuid: fa881bb37725bb14fa8237f0bbb61b92
-  - inputGuid: dcf217d86ca83674789c3c6bc14228a6
-    outputGuid: fa881bb37725bb14fa8237f0bbb61b92
---- !u!114 &802525083929898686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6638d6f45028ab640ad09fa6870122e2, type: 3}
-  m_Name: FAED_SequenceNode
-  m_EditorClassIdentifier: 
-  editorPos:
-    serializedVersion: 2
-    x: 269.6
-    y: 259.2
-    width: 267.19998
-    height: 108
-  childrens: []
---- !u!114 &3131881461454387007
+--- !u!114 &-7427470786183461270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   editorPos:
     serializedVersion: 2
-    x: 387.2
-    y: 84.799995
-    width: 156
-    height: 83.200005
-  children: {fileID: 802525083929898686}
---- !u!114 &4921113595221358003
+    x: NaN
+    y: NaN
+    width: NaN
+    height: NaN
+  children: {fileID: 0}
+--- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,12 +28,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d19c144124aaf74f916d4ea0389b099, type: 3}
-  m_Name: FAED_TestNode
+  m_Script: {fileID: 11500000, guid: e2168c5020484e24385bf6d1738d82d0, type: 3}
+  m_Name: NewBehaviorTree
   m_EditorClassIdentifier: 
-  editorPos:
-    serializedVersion: 2
-    x: 303.40002
-    y: 625.80005
-    width: 203.20001
-    height: 83.19995
+  behaviorTree: {fileID: 8693483502836549102}
+  connectData: []
+--- !u!114 &8693483502836549102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5912eec2f50f2458054b931bb9ea2e, type: 3}
+  m_Name: AI
+  m_EditorClassIdentifier: 
+  nodes:
+  - {fileID: -7427470786183461270}

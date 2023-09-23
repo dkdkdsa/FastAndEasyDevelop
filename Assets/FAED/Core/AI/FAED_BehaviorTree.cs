@@ -9,6 +9,14 @@ namespace FD.Dev.AI
     {
         
         [HideInInspector] public List<FAED_Node> nodes = new List<FAED_Node>();
+        [HideInInspector] public FAED_Node rootNode;
+
+        public void SettingRootNode()
+        {
+
+            rootNode = nodes.Find(x => x as FAED_RootNode != null);
+
+        }
 
     }
 
