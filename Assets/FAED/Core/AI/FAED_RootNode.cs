@@ -17,11 +17,13 @@ namespace FD.Dev.AI
 
         }
 
-        public override FAED_Node Copy()
+        public override FAED_Node Copy(FAED_BehaviorTreeRunner runner)
         {
 
+            this.runner = runner;
+
             var node = Instantiate(this);
-            node.children = children.Copy();
+            node.children = children.Copy(runner);
 
             return node;
 

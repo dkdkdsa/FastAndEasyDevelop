@@ -22,7 +22,7 @@ namespace FD.Dev.AI
         protected virtual void Start()
         {
             
-            behaviorTree.rootNode = behaviorTree.rootNode.Copy();
+            behaviorTree.rootNode = behaviorTree.rootNode.Copy(this);
 
         }
 
