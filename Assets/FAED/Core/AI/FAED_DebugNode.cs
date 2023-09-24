@@ -8,7 +8,7 @@ namespace FD.Dev.AI
     public class FAED_DebugNode : FAED_ActionNode
     {
 
-        [SerializeField] private string debugText;
+        public string debugText;
 
         protected override FAED_NodeState OnExecute()
         {

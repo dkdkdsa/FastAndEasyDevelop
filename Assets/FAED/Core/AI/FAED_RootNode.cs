@@ -10,6 +10,13 @@ namespace FD.Dev.AI
 
         public FAED_Node children;
 
+        public override void Init(Transform trm)
+        {
+
+            children.Init(trm);
+
+        }
+
         protected override FAED_NodeState OnExecute()
         {
 
@@ -17,13 +24,11 @@ namespace FD.Dev.AI
 
         }
 
-        public override FAED_Node Copy(FAED_BehaviorTreeRunner runner)
+        public override FAED_Node Copy()
         {
 
-            this.runner = runner;
-
             var node = Instantiate(this);
-            node.children = children.Copy(runner);
+            node.children = children.Copy();
 
             return node;
 

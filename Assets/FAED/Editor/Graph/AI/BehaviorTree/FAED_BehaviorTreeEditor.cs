@@ -180,6 +180,18 @@ namespace FD.Core.Editors
                     graphView.AddElement(obj);
 
                 }
+                else if(node as FAED_DecoratorNode)
+                {
+
+                    var obj = new FAED_BehaviorChildNode(node.GetType(), Port.Capacity.Single, node.GetType().Name, "DecoratorNode");
+                    obj.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                    obj.nodeObject = node;
+                    obj.guid = node.guid;
+                    obj.SetPosition(node.editorPos);
+                    obj.OnSelectEvent += inspactor.HandleCreateInspactor;
+                    graphView.AddElement(obj);
+
+                }
                 else if(node as FAED_RootNode)
                 {
 

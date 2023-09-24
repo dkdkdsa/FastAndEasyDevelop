@@ -22,7 +22,8 @@ namespace FD.Dev.AI
         protected virtual void Start()
         {
             
-            behaviorTree.rootNode = behaviorTree.rootNode.Copy(this);
+            behaviorTree.rootNode = behaviorTree.rootNode.Copy();
+            behaviorTree.rootNode.Init(transform);
 
         }
 

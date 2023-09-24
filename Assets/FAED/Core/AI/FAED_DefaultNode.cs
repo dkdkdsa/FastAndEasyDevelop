@@ -22,7 +22,6 @@ namespace FD.Dev.AI
         [HideInInspector] public GUID guid;
         [HideInInspector] public Rect editorPos;
 
-        protected FAED_BehaviorTreeRunner runner;
         protected FAED_NodeState state;
         protected bool started;
 
@@ -51,14 +50,13 @@ namespace FD.Dev.AI
 
         }
 
-        public virtual FAED_Node Copy(FAED_BehaviorTreeRunner runner)
+        public virtual FAED_Node Copy()
         {
-
-            this.runner = runner;
 
             return Instantiate(this);
 
         }
+        public virtual void Init(Transform trm) { }
 
         public void Breaking()
         {
@@ -82,14 +80,21 @@ namespace FD.Dev.AI
 
         [HideInInspector] public List<FAED_Node> childrens = new List<FAED_Node>();
 
-        public override FAED_Node Copy(FAED_BehaviorTreeRunner runner)
+        public override FAED_Node Copy()
         {
 
             var node = Instantiate(this);
 
-            node.childrens = childrens.ConvertAll(x => x.Copy(runner));
+            node.childrens = childrens.ConvertAll(x => x.Copy());
 
             return node;
+
+        }
+
+        public override void Init(Transform trm)
+        {
+
+            childrens.ForEach(x => x.Init(trm));
 
         }
 
@@ -100,13 +105,18 @@ namespace FD.Dev.AI
 
         [HideInInspector] public FAED_Node children;
 
-        public override FAED_Node Copy(FAED_BehaviorTreeRunner runner)
+        public override void Init(Transform trm)
         {
 
-            this.runner = runner;
+            children.Init(trm);
+
+        }
+
+        public override FAED_Node Copy()
+        {
 
             var node = Instantiate(this);
-            node.children = Instantiate(children);
+            node.children = children.Copy();
             
             return node;
 
