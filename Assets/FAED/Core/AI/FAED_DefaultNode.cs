@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace FD.Dev.AI
@@ -19,7 +17,7 @@ namespace FD.Dev.AI
     public abstract class FAED_Node : ScriptableObject
     {
 
-        [HideInInspector] public GUID guid;
+        [HideInInspector] public string guid;
         [HideInInspector] public Rect editorPos;
 
         protected FAED_NodeState state;
@@ -85,7 +83,17 @@ namespace FD.Dev.AI
 
             var node = Instantiate(this);
 
-            node.childrens = childrens.ConvertAll(x => x.Copy());
+
+
+
+            node.childrens = new List<FAED_Node>();
+
+            foreach(var ch in childrens)
+            {
+
+                node.childrens.Add(ch.Copy());
+
+            }
 
             return node;
 

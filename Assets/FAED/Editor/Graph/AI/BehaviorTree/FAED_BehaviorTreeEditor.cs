@@ -124,6 +124,9 @@ namespace FD.Core.Editors
 
             saveData.behaviorTree.SettingRootNode();
 
+            AssetDatabase.SaveAssets();
+            EditorUtility.SetDirty(saveData.behaviorTree);
+
         }
 
         private void HandleLoad()
