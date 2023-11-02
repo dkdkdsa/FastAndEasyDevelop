@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FD.Core;
 using System;
+using System.Threading.Tasks;
 
 namespace FD.Dev
 {
@@ -81,6 +82,13 @@ namespace FD.Dev
         {
 
             FAED_Core.DelayInvoke.InvokeDelayRealTime(action, delay);
+
+        }
+        public static async void InvokeDelayAsync(Action action, float delay)
+        {
+
+            await Task.Delay((int)(delay * 1000));
+            action();
 
         }
 
