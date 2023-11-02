@@ -15,8 +15,8 @@ MonoBehaviour:
   guid: 8c50204550037c34791b2f298f5df1df
   editorPos:
     serializedVersion: 2
-    x: 569.6
-    y: 343.2
+    x: 577.6
+    y: 351.2
     width: 156
     height: 83.19998
   children: {fileID: -1523177205880986104}
@@ -35,10 +35,10 @@ MonoBehaviour:
   guid: ccbbcfd0afdd5e24eb5937eae8c3ff83
   editorPos:
     serializedVersion: 2
-    x: 486.4
-    y: 551.19995
+    x: 494.4
+    y: 558.39996
     width: 247.19998
-    height: 108.80005
+    height: 108.79999
   childrens:
   - {fileID: 4881578480928206324}
   - {fileID: 1375588155193454650}
@@ -77,8 +77,8 @@ MonoBehaviour:
   guid: 2d09fe80379380741bad1bd1ee0fa10d
   editorPos:
     serializedVersion: 2
-    x: 805.6
-    y: 752.8
+    x: 813.6
+    y: 760.8
     width: 228
     height: 83.20001
   debugText: 123
@@ -115,8 +115,8 @@ MonoBehaviour:
   guid: 30dadccd5f7fa634bac30aa4660bebb9
   editorPos:
     serializedVersion: 2
-    x: 484
-    y: 743.19995
+    x: 492
+    y: 750.39996
     width: 228
     height: 84
   debugText: 33

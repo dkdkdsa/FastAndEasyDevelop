@@ -99,7 +99,7 @@ namespace FD.Dev
         public static float Easing(FAED_Easing ease, float t)
         {
 
-            return FAED_Core.EasingFunc.GetFunc(ease, t);
+            return FAED_EasingFunc.GetFunc(ease, t);
 
         }
 

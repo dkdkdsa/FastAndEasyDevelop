@@ -1,13 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using System.Linq;
-using System.IO;
 using System;
 using FD.Dev.AI;
+using UnityEditor.Callbacks;
 
 namespace FD.Core.Editors
 {
@@ -15,7 +14,7 @@ namespace FD.Core.Editors
     internal class FAED_BehaviorTreeEditorWindow : FAED_GraphBaseWindow<FAED_BehaviorTreeEditorWindow.FAED_BehaviorTreeGraphView>
     {
 
-        private FAED_BehaviorTreeSaveData saveData;
+        private static FAED_BehaviorTreeSaveData saveData;
         private FAED_VisualWindow inspactor;
         private VisualElement graphRoot;
 
@@ -81,6 +80,9 @@ namespace FD.Core.Editors
 
                 var path = EditorUtility.SaveFilePanelInProject("Save", "NewBehaviorTree", "asset", "Save");
 
+                if (path == string.Empty) return;
+
+
                 saveData = ScriptableObject.CreateInstance<FAED_BehaviorTreeSaveData>();
                 var bt = ScriptableObject.CreateInstance<FAED_BehaviorTree>();
                 bt.name = "AI";
@@ -93,6 +95,8 @@ namespace FD.Core.Editors
                 graphView.AddGraphNode(new FAED_BehaviorRootNode());
                 saveData = AssetDatabase.LoadAssetAtPath<FAED_BehaviorTreeSaveData>(path);
                 saveData.behaviorTree = bt;
+
+
 
             }
 
@@ -149,6 +153,9 @@ namespace FD.Core.Editors
             });
 
             var path = EditorUtility.OpenFilePanel("Open", Application.dataPath, "asset");
+
+            if (path == string.Empty) return;
+
             path = path.Replace(Application.dataPath, "");
             path = path.Insert(0, "Assets");
 
@@ -156,10 +163,32 @@ namespace FD.Core.Editors
 
             if (saveData == null) return;
 
-            saveData.behaviorTree.nodes.ForEach((node) =>
+            DrawGraph(saveData);
+
+        }
+
+        private void DrawGraph(FAED_BehaviorTreeSaveData save)
+        {
+
+            if(save == null)
             {
 
-                if(node as FAED_ActionNode)
+                save = saveData;
+
+            }
+            else
+            {
+
+                saveData = save;
+
+            }
+
+            if (save == null) return;
+
+            save.behaviorTree.nodes.ForEach((node) =>
+            {
+
+                if (node as FAED_ActionNode)
                 {
 
                     var obj = new FAED_BehaviorTreeBaseNode(node.GetType(), node.GetType().Name, "ActionNode");
@@ -171,7 +200,7 @@ namespace FD.Core.Editors
                     graphView.AddElement(obj);
 
                 }
-                else if(node as FAED_CompositeNode)
+                else if (node as FAED_CompositeNode)
                 {
 
                     var obj = new FAED_BehaviorChildNode(node.GetType(), Port.Capacity.Multi, node.GetType().Name, "CompositeNode");
@@ -183,7 +212,7 @@ namespace FD.Core.Editors
                     graphView.AddElement(obj);
 
                 }
-                else if(node as FAED_DecoratorNode)
+                else if (node as FAED_DecoratorNode)
                 {
 
                     var obj = new FAED_BehaviorChildNode(node.GetType(), Port.Capacity.Single, node.GetType().Name, "DecoratorNode");
@@ -195,7 +224,7 @@ namespace FD.Core.Editors
                     graphView.AddElement(obj);
 
                 }
-                else if(node as FAED_RootNode)
+                else if (node as FAED_RootNode)
                 {
 
                     var obj = new FAED_BehaviorChildNode(node.GetType(), Port.Capacity.Single, "StartPoint", "Root");
@@ -210,7 +239,7 @@ namespace FD.Core.Editors
 
             });
 
-            saveData.connectData.ForEach((x) =>
+            save.connectData.ForEach((x) =>
             {
 
                 var inputNode = graphView.Query<FAED_BehaviorTreeBaseNode>().ToList().Find(xx => xx.guid.ToString() == x.inputGuid);
@@ -221,6 +250,7 @@ namespace FD.Core.Editors
                 graphView.AddElement(edge);
 
             });
+
 
         }
 
@@ -280,25 +310,6 @@ namespace FD.Core.Editors
 
         }
 
-        protected override void OnEnable()
-        {
-            
-            base.OnEnable();
-            AddToolBar();
-
-            graphRoot = new VisualElement();
-            graphRoot.style.flexGrow = 1;
-            rootVisualElement.Add(graphRoot);
-
-            SetUpGraph();
-            SetUpInspacter();
-            SetUpSplit();
-            SetUpToolBar();
-
-            graphView.Init(inspactor, HandleGraphViewChanged);
-
-        }
-
         private GraphViewChange HandleGraphViewChanged(GraphViewChange graphViewChange)
         {
 
@@ -328,6 +339,53 @@ namespace FD.Core.Editors
             }
 
             return graphViewChange;
+
+        }
+
+        [OnOpenAsset]
+        public static bool OnOpenAsset(int instanceID, int line)
+        {
+
+            var obj = Selection.activeObject as FAED_BehaviorTreeSaveData;
+
+            if (obj != null)
+            {
+
+                saveData = obj;
+                OpenEditor();
+                return true;
+
+            }
+
+            return false;
+
+        }
+
+        protected override void OnEnable()
+        {
+            
+            base.OnEnable();
+            AddToolBar();
+
+            graphRoot = new VisualElement();
+            graphRoot.style.flexGrow = 1;
+            rootVisualElement.Add(graphRoot);
+
+            SetUpGraph();
+            SetUpInspacter();
+            SetUpSplit();
+            SetUpToolBar();
+
+            graphView.Init(inspactor, HandleGraphViewChanged);
+
+            DrawGraph(null);
+
+        }
+
+        private void OnDisable()
+        {
+
+            saveData = null;
 
         }
 
