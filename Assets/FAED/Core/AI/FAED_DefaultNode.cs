@@ -19,6 +19,8 @@ namespace FD.Dev.AI
 
         [HideInInspector] public string guid;
         [HideInInspector] public Rect editorPos;
+        [HideInInspector] public Transform transform;
+        [HideInInspector] public GameObject gameObject;
 
         protected FAED_NodeState state;
         protected bool started;
@@ -54,7 +56,14 @@ namespace FD.Dev.AI
             return Instantiate(this);
 
         }
-        public virtual void Init(Transform trm) { }
+
+        public virtual void Init(Transform trm) 
+        {
+            
+            transform = trm;
+            gameObject = trm.gameObject;
+
+        }
 
         public void Breaking()
         {
@@ -82,9 +91,6 @@ namespace FD.Dev.AI
         {
 
             var node = Instantiate(this);
-
-
-
 
             node.childrens = new List<FAED_Node>();
 

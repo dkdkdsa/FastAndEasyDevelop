@@ -8,7 +8,7 @@ namespace FD.Dev.AI
     public class FAED_RootNode : FAED_Node
     {
 
-        public FAED_Node children;
+        [HideInInspector] public FAED_Node children;
 
         public override void Init(Transform trm)
         {
