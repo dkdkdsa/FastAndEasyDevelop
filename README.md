@@ -13,5 +13,3 @@ Bhevior tree
 
 GraphView(확장) 
 등 다양한 기능이 있습니다!
-
-패키지 : https://drive.google.com/file/d/12eYjwFS3mpGHFBqhGAeR7CIaYVAJfZo2/view?usp=sharing
