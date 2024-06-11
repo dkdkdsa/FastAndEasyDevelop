@@ -9,7 +9,7 @@ ObjectPooling
 
 GoogleParsing
 
-Bhevior tree
+Behavior tree
 
 GraphView(확장) 
 등 다양한 기능이 있습니다!
