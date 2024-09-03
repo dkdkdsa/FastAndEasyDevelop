@@ -1,108 +1,70 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using System.Linq;
-using System.IO;
 using System;
 using FD.Dev.AI;
-
+using UnityEditor.Callbacks;
 
 namespace FD.Core.Editors
 {
 
-
-    //그래프뷰 에디터 창
-    internal class FAED_BehaviorTreeBaseEditor : FAED_GraphBaseWindow<FAED_BehaviorTreeGraph>
+    internal class FAED_BehaviorTreeEditorWindow : FAED_GraphBaseWindow<FAED_BehaviorTreeEditorWindow.FAED_BehaviorTreeGraphView>
     {
 
+        private static FAED_BehaviorTreeSaveData saveData;
+        private FAED_VisualWindow inspactor;
         private VisualElement graphRoot;
-        private FAED_BehaviorTree behaviorTree;
 
         [MenuItem("FAED/AI/BehaviorTree")]
-        private static void Open()
+        private static void OpenEditor()
         {
 
-            var window = CreateWindow<FAED_BehaviorTreeBaseEditor>();
-            window.titleContent.text = "BehaviorTree Editor";
-            window.maximized = true;
+            var window = CreateWindow<FAED_BehaviorTreeEditorWindow>();
+            window.titleContent.text = "BehaviorTreeEditor";
+
             window.Show();
+            window.maximized = true;
 
         }
 
-        protected override void OnEnable()
+        private void SetUpGraph()
         {
-
-            behaviorTree = ScriptableObject.CreateInstance<FAED_BehaviorTree>();
-
-            AddToolBar();
-            SetUpToolbar();
-            CreateGraphRoot();
-            SetUpGraphView();
-            CreateSpliteView();
-
-            Save();
-
-            var root = new FAED_BehaviorRootNode(graphView);
-
-            root.nodeObject.name = "RootNode";
-
-            graphView.AddAssets(root);
-            graphView.AddElement(root);
-
-            root.RefreshAll();
-
-        }
-
-        private void CreateGraphRoot()
-        {
-
-            graphRoot = new VisualElement();
-            graphRoot.style.position = Position.Relative;
-            graphRoot.style.flexDirection = FlexDirection.Row;
-            graphRoot.style.flexGrow = 1;
-
-            rootVisualElement.Add(graphRoot);
-
-        }
-
-        private void CreateSpliteView()
-        {
-
-            TwoPaneSplitView splitView = new TwoPaneSplitView(1, 300, TwoPaneSplitViewOrientation.Horizontal);
-
-            splitView.contentContainer.Add(graphView);
-            splitView.contentContainer.Add(new FAED_VisualWindow("Insp", Position.Relative, new Color(0.2f, 0.2f, 0.2f)));
-            graphRoot.Add(splitView);
-
-        }
-
-        private void SetUpGraphView()
-        {
-
-            graphView = new FAED_BehaviorTreeGraph();
 
             graphView.SetDrag();
-            graphView.SetMiniMap(new Rect(10, 30, 300, 300));
             graphView.SetGrid();
             graphView.SetZoom();
-
             graphView.style.position = Position.Relative;
-            graphView.style.width = 1600;
-            graphView.style.flexGrow = 1;
-
-            graphView.Init(behaviorTree);
+            graphView.SetMiniMap(new Rect(10, 10, 300, 300));
 
         }
 
-        private void SetUpToolbar()
+        private void SetUpInspacter()
         {
 
-            var saveBtn = new Button(Save);
+            inspactor = new FAED_VisualWindow("Inspactor", Position.Relative, new Color(0.3f, 0.3f, 0.3f));
+
+        }
+
+        private void SetUpSplit()
+        {
+
+            var split = new TwoPaneSplitView(1, 300, TwoPaneSplitViewOrientation.Horizontal);
+            split.contentContainer.Add(graphView);
+            split.contentContainer.Add(inspactor);
+            graphRoot.Add(split);
+
+        }
+
+        private void SetUpToolBar()
+        {
+
+            var saveBtn = new Button(HandleSave);
             saveBtn.text = "SaveFile";
-            var loadBtn = new Button(Load);
+
+            var loadBtn = new Button(HandleLoad);
             loadBtn.text = "LoadFile";
 
             toolbar.Add(saveBtn);
@@ -110,232 +72,288 @@ namespace FD.Core.Editors
 
         }
 
-        private void Load()
+        private void HandleSave()
         {
 
-
-
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        private void Save()
-        {
-
-            if(!behaviorTree.isMemory)
+            if(saveData == null)
             {
 
-                var path = EditorUtility.SaveFilePanelInProject("SaveBehaviorTree", "NewBehaviorTree", "asset", "Save");
+                var path = EditorUtility.SaveFilePanelInProject("Save", "NewBehaviorTree", "asset", "Save");
+
+                if (path == string.Empty) return;
 
 
-                AssetDatabase.CreateAsset(behaviorTree, path);
+                saveData = ScriptableObject.CreateInstance<FAED_BehaviorTreeSaveData>();
+                var bt = ScriptableObject.CreateInstance<FAED_BehaviorTree>();
+                bt.name = "AI";
 
-                behaviorTree.isMemory = true;
+                AssetDatabase.CreateAsset(saveData, path);
+                AssetDatabase.AddObjectToAsset(bt, saveData);
+
+                AssetDatabase.SaveAssets();
+
+                graphView.AddGraphNode(new FAED_BehaviorRootNode());
+                saveData = AssetDatabase.LoadAssetAtPath<FAED_BehaviorTreeSaveData>(path);
+                saveData.behaviorTree = bt;
+
+
 
             }
 
-            var nodeLs = graphView.edges.ToList();
+            var nodeList = graphView.Query<FAED_BehaviorTreeBaseNode>().ToList();
 
-            nodeLs.ForEach((x) =>
+            foreach (var node in nodeList)
             {
 
-                var baseNode = behaviorTree.nodes.Find(node => node.guid == (x.output.node as FAED_BaseNode).guid);
-                var childNode = behaviorTree.nodes.Find(node => node.guid == (x.input.node as FAED_BaseNode).guid);
+                node.nodeObject.editorPos = node.localBound;
 
-                if(baseNode as FAED_ControlFlowNode != null)
+                var com = node.nodeObject as FAED_CompositeNode;
+
+                if(com != null)
                 {
 
-                    var baseControllNode = baseNode as FAED_ControlFlowNode;
-                    baseControllNode.childrens.Add(childNode);
-
-                }
-                else if(baseNode as FAED_DecoratorNode != null)
-                {
-
-                    var baseDecoNode = baseNode as FAED_DecoratorNode;
-                    baseDecoNode.children = childNode;
-
-                }
-                else if(baseNode as FAED_RootNode != null)
-                {
-
-                    var baseDecoNode = baseNode as FAED_RootNode;
-                    baseDecoNode.children = childNode;
+                    com.childrens.Clear();
 
                 }
 
+                if (saveData.behaviorTree.nodes.Contains(node.nodeObject)) continue;
 
+                saveData.behaviorTree.nodes.Add(node.nodeObject);
+                AssetDatabase.AddObjectToAsset(node.nodeObject, saveData.behaviorTree);
+                AssetDatabase.SaveAssets();
+
+            }
+
+            SaveConnect();
+
+            saveData.behaviorTree.SettingRootNode();
+
+            AssetDatabase.SaveAssets();
+            EditorUtility.SetDirty(saveData.behaviorTree);
+
+        }
+
+        private void HandleLoad()
+        {
+
+            saveData = null;
+
+            graphView.nodes.ToList().ForEach(node =>
+            {
+
+                graphView.RemoveElement(node);
 
             });
 
-            AssetDatabase.SaveAssets();
-
-        }
-
-
-    }
-
-    internal class FAED_BehaviorTreeGraph : FAED_BaseGraphView
-    {
-
-        private FAED_BehaviorTreeSearchWindow searchWindow;
-        private FAED_BehaviorTree behaviorTree;
-
-        public FAED_BehaviorTreeGraph()
-        {
-
-            AddSearchWindow();
-
-        }
-
-        public void Init(FAED_BehaviorTree behaviorTree)
-        {
-
-            this.behaviorTree = behaviorTree;
-
-        }
-
-        private void AddSearchWindow()
-        {
-
-            searchWindow = ScriptableObject.CreateInstance<FAED_BehaviorTreeSearchWindow>();
-            searchWindow.Init(this);
-            nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
-
-        }
-
-        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
-        {
-
-            return ports.ToList().Where(x => x.direction != startPort.direction && x.node != startPort.node).ToList();
-
-        }
-
-        public void RemovePort(FAED_BaseNode node, Port port)
-        {
-
-            var targetEdge = edges.ToList().Where(x => x.output.node == port.node && x.output.portName == port.portName);
-
-            if (targetEdge.Any())
+            graphView.edges.ToList().ForEach(edge =>
             {
 
-                var edge = targetEdge.First();
-                edge.input.Disconnect(edge);
-                RemoveElement(targetEdge.First());
+                graphView.RemoveElement(edge);
+
+            });
+
+            var path = EditorUtility.OpenFilePanel("Open", Application.dataPath, "asset");
+
+            if (path == string.Empty) return;
+
+            path = path.Replace(Application.dataPath, "");
+            path = path.Insert(0, "Assets");
+
+            saveData = AssetDatabase.LoadAssetAtPath<FAED_BehaviorTreeSaveData>(path);
+
+            if (saveData == null) return;
+
+            DrawGraph(saveData);
+
+        }
+
+        private void DrawGraph(FAED_BehaviorTreeSaveData save)
+        {
+
+            if(save == null)
+            {
+
+                save = saveData;
 
             }
-            
-            node.outputContainer.Remove(port);
-
-            node.RefreshAll();
-
-            var item = node.outputContainer.Query<Port>().ToList().OrderBy(x => int.Parse(x.portName)).ToList();
-
-            for (int i = 0; i < item.Count; i++)
+            else
             {
 
-                item[i].portName = (i + 1).ToString();
+                saveData = save;
 
             }
 
-            node.RefreshAll();
+            if (save == null) return;
 
-        }
-
-        public void AddAssets(FAED_BehaviorTreeNode node)
-        {
-
-            AssetDatabase.AddObjectToAsset(node.nodeObject, behaviorTree);
-            behaviorTree.nodes.Add(node.nodeObject);
-            //AssetDatabase.SaveAssets();
-
-        }
-
-    }
-
-    internal class FAED_BehaviorTreeSearchWindow : ScriptableObject, ISearchWindowProvider
-    {
-
-        private FAED_BehaviorTreeGraph graph;
-
-        public void Init(FAED_BehaviorTreeGraph graph)
-        {
-
-            this.graph = graph;
-
-        }
-
-        public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
-        {
-
-            var tree = new List<SearchTreeEntry>()
+            save.behaviorTree.nodes.ForEach((node) =>
             {
 
-                new SearchTreeGroupEntry(new GUIContent("Create Behavior"), 0),
-                new SearchTreeGroupEntry(new GUIContent("Node"), 1),
+                if (node as FAED_ActionNode)
+                {
 
-            };
+                    var obj = new FAED_BehaviorTreeBaseNode(node.GetType(), node.GetType().Name, "ActionNode");
+                    obj.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                    obj.nodeObject = node;
+                    obj.guid = node.guid;
+                    obj.SetPosition(node.editorPos);
+                    obj.OnSelectEvent += inspactor.HandleCreateInspactor;
+                    graphView.AddElement(obj);
 
-            var types = TypeCache.GetTypesDerivedFrom<FAED_Node>();
+                }
+                else if (node as FAED_CompositeNode)
+                {
 
-            var nodes = types.Where(x => x.IsAbstract == false && x.Name != "FAED_RootNode").ToList();
+                    var obj = new FAED_BehaviorChildNode(node.GetType(), Port.Capacity.Multi, node.GetType().Name, "CompositeNode");
+                    obj.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                    obj.nodeObject = node;
+                    obj.guid = node.guid;
+                    obj.SetPosition(node.editorPos);
+                    obj.OnSelectEvent += inspactor.HandleCreateInspactor;
+                    graphView.AddElement(obj);
 
-            for (int i = 0; i < nodes.Count; i++)
+                }
+                else if (node as FAED_DecoratorNode)
+                {
+
+                    var obj = new FAED_BehaviorChildNode(node.GetType(), Port.Capacity.Single, node.GetType().Name, "DecoratorNode");
+                    obj.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                    obj.nodeObject = node;
+                    obj.guid = node.guid;
+                    obj.SetPosition(node.editorPos);
+                    obj.OnSelectEvent += inspactor.HandleCreateInspactor;
+                    graphView.AddElement(obj);
+
+                }
+                else if (node as FAED_RootNode)
+                {
+
+                    var obj = new FAED_BehaviorChildNode(node.GetType(), Port.Capacity.Single, "StartPoint", "Root");
+                    obj.nodeObject = node;
+                    obj.guid = node.guid;
+                    obj.SetPosition(node.editorPos);
+                    obj.OnSelectEvent += inspactor.HandleCreateInspactor;
+                    graphView.AddElement(obj);
+
+
+                }
+
+            });
+
+            save.connectData.ForEach((x) =>
             {
 
-                tree.Add(new SearchTreeEntry(new GUIContent(nodes[i].Name)) { userData = nodes[i], level = 2 });
+                var inputNode = graphView.Query<FAED_BehaviorTreeBaseNode>().ToList().Find(xx => xx.guid.ToString() == x.inputGuid);
+                var outputNode = graphView.Query<FAED_BehaviorTreeBaseNode>().ToList().Find(xx => xx.guid.ToString() == x.outputGuid);
+
+                var edge = inputNode.inputContainer.Q<Port>().ConnectTo(outputNode.outputContainer.Q<Port>());
+
+                graphView.AddElement(edge);
+
+            });
+
+
+        }
+
+        private void SaveConnect()
+        {
+
+            var edgeLs = graphView.edges.ToList();
+            saveData.connectData.Clear();
+
+            foreach(var edge in edgeLs)
+            {
+
+                var inputNode = edge.input.node as FAED_BehaviorTreeBaseNode;
+                var outputNode = edge.output.node as FAED_BehaviorTreeBaseNode;
+
+                saveData.connectData.Add(new FAED_ConnectData 
+                { 
+
+                    inputGuid = inputNode.guid.ToString(), 
+                    outputGuid = outputNode.guid.ToString()
+
+                });
+
+                ConnectNode(inputNode, outputNode);
 
             }
 
-            return tree;
+        }
+
+        private void ConnectNode(FAED_BehaviorTreeBaseNode input, FAED_BehaviorTreeBaseNode output)
+        {
+
+            if(output.nodeObject as FAED_CompositeNode != null)
+            {
+
+                var obj = output.nodeObject as FAED_CompositeNode;
+
+                obj.childrens.Add(input.nodeObject);
+                obj.childrens = obj.childrens.OrderBy(x => x.editorPos.x).ToList();
+
+            }
+            else if(output.nodeObject as FAED_DecoratorNode != null)
+            {
+
+                var obj = output.nodeObject as FAED_DecoratorNode;
+                obj.children = input.nodeObject;
+
+            }
+            else if(output.nodeObject as FAED_RootNode != null)
+            {
+
+
+                var obj = output.nodeObject as FAED_RootNode;
+                obj.children = input.nodeObject;
+
+            }
 
         }
 
-        public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
+        private GraphViewChange HandleGraphViewChanged(GraphViewChange graphViewChange)
         {
 
-
-            if(searchTreeEntry.userData is Type)
+            if (graphViewChange.elementsToRemove != null)
             {
 
-                var t = searchTreeEntry.userData as Type;
-
-                if (t.IsSubclassOf(typeof(FAED_ControlFlowNode)))
+                foreach (var elem in graphViewChange.elementsToRemove)
                 {
 
-                    var node = new FAED_BehaviorChildNode(graph, t.Name, "ControlFlow", t);
-                    node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
-                    node.AddPort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi);
-                    node.transform.position = context.screenMousePosition;
+                    var node = elem as FAED_BehaviorTreeBaseNode;
 
-                    graph.AddAssets(node);
-                    graph.AddElement(node);
+                    if (node != null && saveData != null)
+                    {
 
-                }
-                else if(t.IsSubclassOf(typeof(FAED_DecoratorNode)))
-                {
+                        if (saveData.behaviorTree.nodes.Contains(node.nodeObject))
+                        {
 
-                    var node = new FAED_BehaviorChildNode(graph, t.Name, "Decorator", t);
-                    node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
-                    node.AddPort(Orientation.Vertical, Direction.Output, Port.Capacity.Single);
-                    node.transform.position = context.screenMousePosition;
+                            saveData.behaviorTree.nodes.Remove(node.nodeObject);
+                            AssetDatabase.RemoveObjectFromAsset(node.nodeObject);
 
-                    graph.AddAssets(node);
-                    graph.AddElement(node);
+                        }
+
+                    }
 
                 }
-                else
-                {
 
-                    var node = new FAED_BehaviorActionNode(t.Name, "Behavior", t);
-                    node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
-                    node.transform.position = context.screenMousePosition;
+            }
 
-                    graph.AddAssets(node);
-                    graph.AddElement(node);
+            return graphViewChange;
 
+        }
 
-                }
+        [OnOpenAsset]
+        public static bool OnOpenAsset(int instanceID, int line)
+        {
+
+            var obj = Selection.activeObject as FAED_BehaviorTreeSaveData;
+
+            if (obj != null)
+            {
+
+                saveData = obj;
+                OpenEditor();
+                return true;
 
             }
 
@@ -343,112 +361,337 @@ namespace FD.Core.Editors
 
         }
 
-    }
-
-    internal class FAED_BehaviorTreeNode : FAED_BaseNode
-    {
-
-        public FAED_Node nodeObject;
-
-        public FAED_BehaviorTreeNode(Type classType) : base(AssetDatabase.GetAssetPath(Resources.Load<VisualTreeAsset>("BehaviorNode")))
+        protected override void OnEnable()
         {
-
-            var style = Resources.Load<StyleSheet>("BehaviorNodeStyle");
-
-            nodeObject = ScriptableObject.CreateInstance(classType) as FAED_Node;
-            nodeObject.guid = guid;
-            styleSheets.Add(style);
-            AddToClassList("node");
-
-            RefreshAll();
-
-        }
-
-    }
-
-    internal class FAED_BehaviorActionNode : FAED_BehaviorTreeNode
-    {        
-
-        public FAED_BehaviorActionNode(string className, string message, Type classType) : base(classType)
-        {
-
-            title = className;
-            mainContainer.Q<Label>("description").text = message;
-
-        }
-
-    }
-
-    internal class FAED_BehaviorRootNode : FAED_BehaviorChildNode
-    {
-
-        public FAED_BehaviorRootNode(FAED_BehaviorTreeGraph graph) : base(graph, "StartPoint", "", typeof(FAED_RootNode))
-        {
-
-            name = "RootNode";
-            AddPort(Orientation.Vertical, Direction.Output, Port.Capacity.Single);
-
-        }
-
-    }
-
-    internal class FAED_BehaviorChildNode : FAED_BehaviorTreeNode
-    {
-
-        protected FAED_BehaviorTreeGraph graph;
-
-        public FAED_BehaviorChildNode(FAED_BehaviorTreeGraph graph, string title, string message, Type classType) : base(classType)
-        {
-
-            this.title = title;
-            mainContainer.Q<Label>("description").text = message;
-            this.graph = graph;
-
-        }
-
-        public List<GUID> ConnectNode()
-        {
-
-            var targetEdge = graph.edges.ToList().Where(x => x.output.node == this).Select(x => x.input.node).ToList();
-
-            return targetEdge.OrderBy(x => x.transform.position.x).ToList().ConvertAll(x => (x as FAED_BehaviorChildNode).guid);
-
-        }
-
-    }
-
-    internal class FAED_VisualWindow : VisualElement
-    {
-
-        public VisualElement titleContainer { get; protected set; }
-        public Label titleLabel { get; protected set; }
-
-        public FAED_VisualWindow(string text, Position position, Color backGroundColor)
-        {
-
-            style.backgroundColor = backGroundColor;
-            style.position = position;
-
-            CreateTitleContainer();
-
-            titleLabel = new Label(text);
             
-            
-            titleContainer.Add(titleLabel);
+            base.OnEnable();
+            AddToolBar();
+
+            graphRoot = new VisualElement();
+            graphRoot.style.flexGrow = 1;
+            rootVisualElement.Add(graphRoot);
+
+            SetUpGraph();
+            SetUpInspacter();
+            SetUpSplit();
+            SetUpToolBar();
+
+            graphView.Init(inspactor, HandleGraphViewChanged);
+
+            DrawGraph(null);
 
         }
 
-        private void CreateTitleContainer()
+        private void OnDisable()
         {
 
-            titleContainer = new VisualElement();
-            titleContainer.style.position = Position.Relative;
-            titleContainer.style.backgroundColor = Color.black;
-            titleContainer.style.flexShrink = 0;
-
-            Add(titleContainer);
+            saveData = null;
 
         }
+
+        #region 그래프 관련
+
+        /// <summary>
+        /// 그래프뷰
+        /// </summary>
+        internal class FAED_BehaviorTreeGraphView : FAED_BaseGraphView
+        {
+
+            private FAED_BehaviorTreeSearchWindow searchWindow;
+            private FAED_VisualWindow inspactor;
+
+            public FAED_BehaviorTreeGraphView() : base()
+            {
+
+                SetSearchWindow();
+
+            }
+
+            private void SetSearchWindow()
+            {
+
+                searchWindow = ScriptableObject.CreateInstance<FAED_BehaviorTreeSearchWindow>();
+                searchWindow.Init(this);
+                nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
+
+            }
+
+            public void Init(FAED_VisualWindow inspactor, GraphViewChanged changed)
+            {
+
+                this.inspactor = inspactor;
+                graphViewChanged += changed;
+
+            }
+
+            public void AddGraphNode(FAED_BehaviorTreeBaseNode node)
+            {
+
+                node.OnSelectEvent += inspactor.HandleCreateInspactor;
+
+                AddElement(node);
+
+            }
+
+            public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+            {
+
+                return ports.ToList().Where(x => x.direction != startPort.direction && x.node != startPort.node).ToList();
+
+            }
+
+
+        }
+
+        /// <summary>
+        /// 그래프 노드 생성창
+        /// </summary>
+        internal class FAED_BehaviorTreeSearchWindow : ScriptableObject, ISearchWindowProvider
+        {
+
+            private FAED_BehaviorTreeGraphView graphView;
+
+            public void Init(FAED_BehaviorTreeGraphView graphView)
+            {
+
+                this.graphView = graphView;
+
+            }
+
+            public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
+            {
+
+                var tree = new List<SearchTreeEntry>()
+                {
+
+                    new SearchTreeGroupEntry(new GUIContent("Create Behavior"), 0),
+                    new SearchTreeGroupEntry(new GUIContent("Create Node"), 1),
+
+                };
+
+                var types = TypeCache.GetTypesDerivedFrom<FAED_Node>();
+
+                foreach(var t in types)
+                {
+
+                    if (t == typeof(FAED_RootNode) || t.IsAbstract) continue;
+
+                    tree.Add(new SearchTreeEntry(new GUIContent(t.Name))
+                    {
+
+                        userData = t,
+                        level = 2
+
+                    });
+
+                }
+
+                
+
+                return tree;
+
+            }
+
+            public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
+            {
+
+                if(SearchTreeEntry.userData as Type != null)
+                {
+
+                    var type = SearchTreeEntry.userData as Type;
+
+                    if (type.IsSubclassOf(typeof(FAED_ActionNode)))
+                    {
+
+                        var node = new FAED_BehaviorTreeBaseNode(type, type.Name, "ActionNode");
+                        node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                        node.transform.position = graphView.ChangeCoordinatesTo(graphView.contentContainer, context.screenMousePosition);
+
+                        graphView.AddGraphNode(node);
+
+                    }
+                    else if (type.IsSubclassOf(typeof(FAED_CompositeNode)))
+                    {
+
+                        var node = new FAED_BehaviorChildNode(type, Port.Capacity.Multi, type.Name, "CompositeNode");
+                        node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                        node.transform.position = context.screenMousePosition;
+
+                        graphView.AddGraphNode(node);
+
+                    }
+                    else if (type.IsSubclassOf(typeof(FAED_DecoratorNode)))
+                    {
+
+
+                        var node = new FAED_BehaviorChildNode(type, Port.Capacity.Single, type.Name, "CompositeNode");
+                        node.AddPort(Orientation.Vertical, Direction.Input, Port.Capacity.Single);
+                        node.transform.position = context.screenMousePosition;
+
+                        graphView.AddGraphNode(node);
+
+                    }
+
+                    return true;
+
+                }
+
+                return false;
+
+            }
+
+        }
+
+        #endregion
+
+        #region Node 관련
+
+        internal class FAED_BehaviorTreeBaseNode : FAED_BaseNode
+        {
+
+            public event Action<FAED_BehaviorTreeBaseNode> OnSelectEvent;
+            public FAED_Node nodeObject;
+            public Label descriptionLabel;
+
+            internal FAED_BehaviorTreeBaseNode(Type classType, string title, string message) : base(AssetDatabase.GetAssetPath(Resources.Load<VisualTreeAsset>("BehaviorNode")))
+            {
+
+                nodeObject = ScriptableObject.CreateInstance(classType) as FAED_Node;
+
+                nodeObject.guid = guid;
+                nodeObject.name = classType.Name;
+
+                styleSheets.Clear();
+                styleSheets.Add(Resources.Load<StyleSheet>("BehaviorNodeStyle"));
+                descriptionLabel = mainContainer.Q<Label>("description");
+                this.title = title;
+                descriptionLabel.text = message;
+
+                RefreshAll();
+
+            }
+
+            public override void OnSelected()
+            {
+
+                base.OnSelected();
+                
+                OnSelectEvent?.Invoke(this);
+
+            }
+
+        }
+
+        internal class FAED_BehaviorChildNode : FAED_BehaviorTreeBaseNode
+        {
+
+            public List<FAED_BehaviorTreeBaseNode> childrens;
+
+            internal FAED_BehaviorChildNode(Type classType, Port.Capacity capacity, string title, string message) : base(classType, title, message)
+            {
+
+                AddPort(Orientation.Vertical, Direction.Output, capacity);
+
+            }
+
+        }
+
+        internal class FAED_BehaviorRootNode : FAED_BehaviorChildNode
+        {
+
+            internal FAED_BehaviorRootNode() : base(typeof(FAED_RootNode), Port.Capacity.Single, "StartPoint", "Root")
+            {
+
+
+            }
+
+        }
+
+        #endregion
+
+        #region 잡것들
+
+        /// <summary>
+        /// uxml작성할줄 몰라서 만든 윈도우
+        /// </summary>
+        internal class FAED_VisualWindow : VisualElement
+        {
+
+            private Editor editor;
+
+            public VisualElement titleContainer { get; protected set; }
+            public Label titleLabel { get; protected set; }
+            public VisualElement guiContainer { get; protected set; }
+
+            public FAED_VisualWindow(string text, Position position, Color backGroundColor)
+            {
+
+                style.backgroundColor = backGroundColor;
+                style.position = position;
+                style.flexGrow = 1;
+
+                CreateTitleContainer();
+
+                titleContainer = new VisualElement();
+                titleContainer.style.position = Position.Relative;
+                titleContainer.style.backgroundColor = Color.black;
+                titleContainer.style.flexShrink = 0;
+
+                titleLabel = new Label(text);
+                titleLabel.style.position = Position.Relative;
+                titleLabel.style.fontSize = 24;
+
+                titleContainer.Add(titleLabel);
+
+                guiContainer = new VisualElement();
+                guiContainer.style.position = Position.Relative;
+                guiContainer.style.flexGrow = 1;
+
+                Add(titleContainer);
+                Add(guiContainer);
+
+
+            }
+
+            private void CreateTitleContainer()
+            {
+
+                titleContainer = new VisualElement();
+                titleContainer.style.position = Position.Relative;
+                titleContainer.style.backgroundColor = Color.black;
+
+                Add(titleContainer);
+
+            }
+
+            public void HandleCreateInspactor(FAED_BehaviorTreeBaseNode node)
+            {
+
+                UnityEngine.Object.DestroyImmediate(editor);
+                editor = Editor.CreateEditor(node.nodeObject);
+                guiContainer.Clear();
+
+                var imgui = new IMGUIContainer(() =>
+                {
+
+                    if (editor.target)
+                    {
+
+                        editor.OnInspectorGUI();
+
+                    }
+
+                });
+
+                imgui.style.flexGrow = 1;
+
+                guiContainer.Add(imgui);
+
+
+            }
+
+        }
+        #endregion
 
     }
 

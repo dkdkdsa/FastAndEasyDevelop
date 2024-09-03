@@ -12,19 +12,19 @@ namespace FD.Core.Editors
     public class FAED_BaseNode : Node
     {
         
-        public GUID guid { get; set; }
+        public string guid { get; set; }
 
         public FAED_BaseNode()
         {
 
-            guid = GUID.Generate();
+            guid = GUID.Generate().ToString();
 
         }
 
         public FAED_BaseNode(string path) : base(path)
         {
 
-            guid = GUID.Generate();
+            guid = GUID.Generate().ToString();
 
         }
 

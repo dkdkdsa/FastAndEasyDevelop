@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 using FD.Dev;
 
 namespace FD.Dev
@@ -45,7 +44,7 @@ namespace FD.Dev
 namespace FD.Core
 {
 
-    public class FAED_EasingFunc
+    public struct FAED_EasingFunc
     {
 
         private const double Back_C1 = 1.70158;
@@ -56,7 +55,7 @@ namespace FD.Core
         private const double Elastic_C4 = (2 * Math.PI) / 3;
         private const double Elastic_C5 = (2 * Math.PI) / 4.5;
 
-        public float GetFunc(FAED_Easing ease, float x)
+        public static float GetFunc(FAED_Easing ease, float x)
         {
 
             switch (ease)

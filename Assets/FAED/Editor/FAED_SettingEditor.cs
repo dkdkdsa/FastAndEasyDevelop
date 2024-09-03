@@ -49,6 +49,7 @@ namespace FD.Core.Editors
                 var obj = CreateInstance<FAED_SettingSO>();
                 AssetDatabase.CreateAsset(obj, "Assets/Resources/FAED/SettingSO.Asset");
                 res = Resources.Load<FAED_SettingSO>("FAED/SettingSO");
+                EditorUtility.SetDirty(res);
 
                 AssetDatabase.Refresh();
 
@@ -76,9 +77,13 @@ namespace FD.Core.Editors
 
                     var obj = CreateInstance<FAED_PoolingSO>();
                     AssetDatabase.CreateAsset(obj, "Assets/Resources/FAED/PoolingSO.Asset");
+                    EditorUtility.SetDirty(obj);
                     res.poolingSO = Resources.Load<FAED_PoolingSO>("FAED/PoolingSO");
 
                 }
+
+                EditorUtility.SetDirty(res);
+                AssetDatabase.SaveAssets();
 
                 Close();
 
